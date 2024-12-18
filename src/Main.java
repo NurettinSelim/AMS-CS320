@@ -2,7 +2,7 @@ import util.DatabaseConnection;
 
 public class Main {
     public static void main(String[] args) {
-        // conenction
+        // connection
         try {
             DatabaseConnection.getConnection();
             System.out.println("Connected to the database");
