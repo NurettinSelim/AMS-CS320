@@ -48,6 +48,7 @@ public class FlightRepository implements IFlightRepository{
         return flight;
     }
 
+
     @Override
     public List<Flight> findAll() throws SQLException {
         String query = "SELECT * FROM flights";

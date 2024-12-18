@@ -9,7 +9,8 @@ public interface IUserService {
     
     User register(User user) throws SQLException;
     
-    User register(String name, String surname, String email, String password) throws SQLException;
+    //User register(String name, String surname, String email, String password) throws SQLException;
+    User register(int id, String email, String password, String role) throws SQLException;
     
     void updateUser(User user) throws SQLException;
     

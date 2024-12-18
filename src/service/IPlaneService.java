@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IPlaneService {
-    Plane createPlane(String planeNumber, int economyCapacity, int businessCapacity) throws SQLException;
+    Plane createPlane(String planeName, int capacity) throws SQLException;
     
     List<Plane> getAllPlanes() throws SQLException;
     

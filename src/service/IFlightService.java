@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface IFlightService {
     Flight createFlight(String flightNumber, LocalDateTime departureTime, LocalDateTime arrivalTime,
-                       String departure, String destination, int planeId, double economyPrice,
-                       double businessPrice) throws SQLException;
+                        String departure, String destination, int planeId, double economyPrice,
+                        double businessPrice, int economyCapacity, int businessCapacity) throws SQLException;
 
     List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) 
             throws SQLException;

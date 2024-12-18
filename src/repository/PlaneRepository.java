@@ -3,10 +3,8 @@ package repository;
 import model.Plane;
 import util.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,5 +106,35 @@ public class PlaneRepository implements IPlaneRepository{  //changed
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
+    }
+    public boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime)
+            throws SQLException {
+        String query = """
+            SELECT COUNT(*) as count FROM flights 
+            WHERE plane_id = ? 
+            AND (
+                (departure_time BETWEEN ? AND ?) OR
+                (arrival_time BETWEEN ? AND ?) OR
+                (departure_time <= ? AND arrival_time >= ?)
+            )
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, planeId);
+            stmt.setTimestamp(2, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(3, Timestamp.valueOf(arrivalTime));
+            stmt.setTimestamp(4, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(5, Timestamp.valueOf(arrivalTime));
+            stmt.setTimestamp(6, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(7, Timestamp.valueOf(arrivalTime));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count") == 0;
+            }
+        }
+        return false;
     }
 }
