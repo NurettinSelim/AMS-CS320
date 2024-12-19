@@ -167,7 +167,7 @@ public class RegisterFrame extends JFrame {
             JOptionPane.showMessageDialog(this,
                 "Please fill in all fields",
                 "Registration Error",
-                JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE); 
             return;
         }
 
