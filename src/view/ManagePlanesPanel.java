@@ -87,16 +87,13 @@ public class ManagePlanesPanel extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JTextField planeNumberField = new JTextField();
-        JSpinner economyCapacitySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
-        JSpinner businessCapacitySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
+        JTextField planeNameField = new JTextField();
+        JSpinner capacitySpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
 
-        formPanel.add(new JLabel("Plane Number:"));
-        formPanel.add(planeNumberField);
-        formPanel.add(new JLabel("Economy Capacity:"));
-        formPanel.add(economyCapacitySpinner);
-        formPanel.add(new JLabel("Business Capacity:"));
-        formPanel.add(businessCapacitySpinner);
+        formPanel.add(new JLabel("Plane Name:"));
+        formPanel.add(planeNameField);
+        formPanel.add(new JLabel("Capacity:"));
+        formPanel.add(capacitySpinner);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton saveButton = new JButton("Save");
@@ -104,15 +101,14 @@ public class ManagePlanesPanel extends JPanel {
 
         saveButton.addActionListener(e -> {
             try {
-                String planeNumber = planeNumberField.getText().trim();
-                int economyCapacity = (int) economyCapacitySpinner.getValue();
-                int businessCapacity = (int) businessCapacitySpinner.getValue();
+                String planeName = planeNameField.getText().trim();
+                int capacity = (int) capacitySpinner.getValue();
 
-                if (planeNumber.isEmpty()) {
-                    throw new IllegalArgumentException("Please enter a plane number");
+                if (planeName.isEmpty()) {
+                    throw new IllegalArgumentException("Please enter a plane name");
                 }
 
-                planeService.createPlane(planeNumber, economyCapacity, businessCapacity);
+                planeService.createPlane(planeName, capacity);
                 refreshPlanes();
                 dialog.dispose();
 
@@ -149,9 +145,8 @@ public class ManagePlanesPanel extends JPanel {
             return;
         }
 
-        String planeNumber = (String) tableModel.getValueAt(selectedRow, 0);
-        int economyCapacity = (int) tableModel.getValueAt(selectedRow, 1);
-        int businessCapacity = (int) tableModel.getValueAt(selectedRow, 2);
+        String planeName = (String) tableModel.getValueAt(selectedRow, 1);
+        int capacity = (int) tableModel.getValueAt(selectedRow, 2);
 
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Edit Plane", true);
         dialog.setLayout(new BorderLayout(10, 10));
@@ -161,16 +156,13 @@ public class ManagePlanesPanel extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JTextField planeNumberField = new JTextField(planeNumber);
-        JSpinner economyCapacitySpinner = new JSpinner(new SpinnerNumberModel(economyCapacity, 0, 1000, 1));
-        JSpinner businessCapacitySpinner = new JSpinner(new SpinnerNumberModel(businessCapacity, 0, 1000, 1));
+        JTextField planeNameField = new JTextField(planeName);
+        JSpinner capacitySpinner = new JSpinner(new SpinnerNumberModel(capacity, 0, 1000, 1));
 
-        formPanel.add(new JLabel("Plane Number:"));
-        formPanel.add(planeNumberField);
-        formPanel.add(new JLabel("Economy Capacity:"));
-        formPanel.add(economyCapacitySpinner);
-        formPanel.add(new JLabel("Business Capacity:"));
-        formPanel.add(businessCapacitySpinner);
+        formPanel.add(new JLabel("Plane Name:"));
+        formPanel.add(planeNameField);
+        formPanel.add(new JLabel("Capacity:"));
+        formPanel.add(capacitySpinner);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton saveButton = new JButton("Save");
@@ -178,24 +170,22 @@ public class ManagePlanesPanel extends JPanel {
 
         saveButton.addActionListener(e -> {
             try {
-                String newPlaneNumber = planeNumberField.getText().trim();
-                int newEconomyCapacity = (int) economyCapacitySpinner.getValue();
-                int newBusinessCapacity = (int) businessCapacitySpinner.getValue();
+                String newPlaneName = planeNameField.getText().trim();
+                int newCapacity = (int) capacitySpinner.getValue();
 
-                if (newPlaneNumber.isEmpty()) {
-                    throw new IllegalArgumentException("Please enter a plane number");
+                if (newPlaneName.isEmpty()) {
+                    throw new IllegalArgumentException("Please enter a plane name");
                 }
 
                 // Get the plane ID (you'll need to modify the table model to store this)
                 List<Plane> planes = planeService.getAllPlanes();
                 Plane plane = planes.stream()
-                        .filter(p -> p.getPlaneNumber().equals(planeNumber))
+                        .filter(p -> p.getPlaneName().equals(planeName))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("Plane not found"));
 
-                plane.setPlaneNumber(newPlaneNumber);
-                plane.setEconomyCapacity(newEconomyCapacity);
-                plane.setBusinessCapacity(newBusinessCapacity);
+                plane.setPlaneName(newPlaneName);
+                plane.setCapacity(newCapacity);
 
                 planeService.updatePlane(plane);
                 refreshPlanes();
