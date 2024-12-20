@@ -19,7 +19,7 @@ public class LoginFrame extends JFrame {
     public LoginFrame() {
         this.setTitle("Airport Management System - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(600, 400);
 
         userService = new UserService();
 
@@ -103,8 +103,8 @@ public class LoginFrame extends JFrame {
 
     private void openMainFrame(User user) {
         SwingUtilities.invokeLater(() -> {
-//            MainFrame mainFrame = new MainFrame(user);
-//            mainFrame.setVisible(true);
+            MainFrame mainFrame = new MainFrame(user);
+            mainFrame.setVisible(true);
         });
     }
 }
