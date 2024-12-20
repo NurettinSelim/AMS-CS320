@@ -2,8 +2,6 @@ package view;
 
 import model.Plane;
 import service.PlaneService;
-import util.UIUpdateManager;
-import util.UIUpdateObserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,7 +9,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ManagePlanesPanel extends JPanel implements UIUpdateObserver {
+public class ManagePlanesPanel extends JPanel {
     private final PlaneService planeService;
     private final JTable planeTable;
     private final DefaultTableModel tableModel;
@@ -23,7 +21,7 @@ public class ManagePlanesPanel extends JPanel implements UIUpdateObserver {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Create table
-        String[] columns = {"Plane Number", "Economy Capacity", "Business Capacity", "Total Capacity"};
+        String[] columns = {"Plane ID", "Plane Name", "Capacity"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -54,20 +52,6 @@ public class ManagePlanesPanel extends JPanel implements UIUpdateObserver {
 
         // Load initial data
         refreshPlanes();
-
-        UIUpdateManager.getInstance().addObserver(this);
-    }
-
-    @Override
-    public void onUIUpdate(String updateType) {
-        if (updateType.equals(UIUpdateManager.PLANE_UPDATE)) {
-            loadPlanes();
-        }
-    }
-
-    // Make sure to remove the observer when the panel is no longer needed
-    public void cleanup() {
-        UIUpdateManager.getInstance().removeObserver(this);
     }
 
     private void refreshPlanes() {
@@ -87,10 +71,9 @@ public class ManagePlanesPanel extends JPanel implements UIUpdateObserver {
         tableModel.setRowCount(0);
         for (Plane plane : planes) {
             tableModel.addRow(new Object[]{
-                    plane.getPlaneNumber(),
-                    plane.getEconomyCapacity(),
-                    plane.getBusinessCapacity(),
-                    plane.getTotalCapacity()
+                    plane.getId(),
+                    plane.getPlaneName(),
+                    plane.getCapacity()
             });
         }
     }
