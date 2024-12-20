@@ -224,10 +224,10 @@ public class ManagePlanesPanel extends JPanel {
             return;
         }
 
-        String planeNumber = (String) tableModel.getValueAt(selectedRow, 0);
+        String planeName = (String) tableModel.getValueAt(selectedRow, 1);
 
         int choice = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete plane " + planeNumber + "?",
+                "Are you sure you want to delete plane " + planeName + "?",
                 "Confirm Delete",
                 JOptionPane.YES_NO_OPTION);
 
@@ -236,7 +236,7 @@ public class ManagePlanesPanel extends JPanel {
                 // Get the plane ID
                 List<Plane> planes = planeService.getAllPlanes();
                 Plane plane = planes.stream()
-                        .filter(p -> p.getPlaneNumber().equals(planeNumber))
+                        .filter(p -> p.getPlaneName().equals(planeName))
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("Plane not found"));
 
