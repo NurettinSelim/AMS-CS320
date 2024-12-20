@@ -6,8 +6,6 @@ import model.User;
 import service.FlightService;
 import service.TicketService;
 import service.UserService;
-import util.UIUpdateManager;
-import util.UIUpdateObserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PassengerListPanel extends JPanel implements UIUpdateObserver {
+public class PassengerListPanel extends JPanel{
     private final UserService userService;
     private final TicketService ticketService;
     private final FlightService flightService;
@@ -103,7 +101,7 @@ public class PassengerListPanel extends JPanel implements UIUpdateObserver {
         add(splitPane, BorderLayout.CENTER);
 
         // Add action listeners
-        searchButton.addActionListener(e -> searchPassengers());
+        //searchButton.addActionListener(e -> searchPassengers());
         deleteButton.addActionListener(e -> deleteSelectedPassenger());
         passengerTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -114,27 +112,12 @@ public class PassengerListPanel extends JPanel implements UIUpdateObserver {
 
         // Load initial data
         refreshPassengers();
-
-        UIUpdateManager.getInstance().addObserver(this);
-    }
-
-    @Override
-    public void onUIUpdate(String updateType) {
-        if (updateType.equals(UIUpdateManager.PASSENGER_UPDATE) ||
-                updateType.equals(UIUpdateManager.TICKET_UPDATE)) {
-            refreshPassengers();
-            loadSelectedPassengerTickets();
-        }
-    }
-
-    public void cleanup() {
-        UIUpdateManager.getInstance().removeObserver(this);
     }
 
     private void refreshPassengers() {
         try {
             List<User> passengers = userService.getAllUsers();
-            updatePassengerTableModel(passengers);
+            //updatePassengerTableModel(passengers);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
                     "Error loading passengers: " + e.getMessage(),
@@ -144,39 +127,39 @@ public class PassengerListPanel extends JPanel implements UIUpdateObserver {
         }
     }
 
-    private void searchPassengers() {
-        String searchTerm = searchField.getText().trim().toLowerCase();
-        try {
-            List<User> allPassengers = userService.getAllUsers();
-            List<User> filteredPassengers = allPassengers.stream()
-                    .filter(p -> !p.isAdmin() && // Only show non-admin users
-                            (p.getName().toLowerCase().contains(searchTerm) ||
-                                    p.getSurname().toLowerCase().contains(searchTerm) ||
-                                    p.getEmail().toLowerCase().contains(searchTerm)))
-                    .toList();
-            updatePassengerTableModel(filteredPassengers);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error searching passengers: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-    }
+//    private void searchPassengers() {
+//        String searchTerm = searchField.getText().trim().toLowerCase();
+//        try {
+//            List<User> allPassengers = userService.getAllUsers();
+//            List<User> filteredPassengers = allPassengers.stream()
+//                    .filter(p -> !p.getRole().equals("ADMIN") && // Only show non-admin users
+//                            (p.getName().toLowerCase().contains(searchTerm) ||
+//                                    p.getSurname().toLowerCase().contains(searchTerm) ||
+//                                    p.getEmail().toLowerCase().contains(searchTerm)))
+//                    .toList();
+//            updatePassengerTableModel(filteredPassengers);
+//        } catch (SQLException e) {
+//            JOptionPane.showMessageDialog(this,
+//                    "Error searching passengers: " + e.getMessage(),
+//                    "Error",
+//                    JOptionPane.ERROR_MESSAGE);
+//            e.printStackTrace();
+//        }
+//    }
 
-    private void updatePassengerTableModel(List<User> passengers) {
-        passengerTableModel.setRowCount(0);
-        for (User passenger : passengers) {
-            if (!passenger.isAdmin()) { // Only show non-admin users
-                passengerTableModel.addRow(new Object[]{
-                        passenger.getId(),
-                        passenger.getName(),
-                        passenger.getSurname(),
-                        passenger.getEmail()
-                });
-            }
-        }
-    }
+//    private void updatePassengerTableModel(List<User> passengers) {
+//        passengerTableModel.setRowCount(0);
+//        for (User passenger : passengers) {
+//            if (passenger.getRole() != "ADMIN") { // Only show non-admin users
+//                passengerTableModel.addRow(new Object[]{
+//                        passenger.getId(),
+//                        passenger.getName(),
+//                        passenger.getSurname(),
+//                        passenger.getEmail()
+//                });
+//            }
+//        }
+//    }
 
     private void loadSelectedPassengerTickets() {
         int selectedRow = passengerTable.getSelectedRow();
