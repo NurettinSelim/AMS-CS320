@@ -1,5 +1,6 @@
 package repository;
 
+import model.Passenger;
 import model.User;
 
 import java.sql.SQLException;
@@ -25,6 +26,12 @@ public class UserRepository implements IUserRepository{
     public List<User> findAll() throws SQLException {
         return null;
     }
+
+    @Override
+    public List<Passenger> findAllPassengers() throws SQLException {
+        return null;
+    }
+
 
     @Override
     public void delete(int id) throws SQLException {

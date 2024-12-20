@@ -1,5 +1,6 @@
 package service;
 
+import model.Passenger;
 import model.User;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,6 +16,8 @@ public interface IUserService {
     void updateUser(User user) throws SQLException;
     
     List<User> getAllUsers() throws SQLException;
+
+    List<Passenger> getAllPassengers() throws SQLException;
     
     void deleteUser(int userId) throws SQLException;
 } 

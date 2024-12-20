@@ -1,6 +1,7 @@
 package service;
 
 import model.User;
+import model.Passenger;
 import repository.UserRepository;
 
 import java.sql.SQLException;
@@ -51,6 +52,10 @@ public class UserService implements IUserService{
         return userRepository.findAll();
     }
 
+    @Override
+    public List<Passenger> getAllPassengers() throws SQLException {
+        return userRepository.findAllPassengers();
+    }
     @Override
     public void deleteUser(int userId) throws SQLException {
         userRepository.delete(userId);

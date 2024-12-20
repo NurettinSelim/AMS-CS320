@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class RegisterFrame extends JFrame {
     private final JTextField nameField;
@@ -18,7 +19,9 @@ public class RegisterFrame extends JFrame {
     private final JPasswordField confirmPasswordField;
     private final UserService userService;
     private final LoginFrame loginFrame;
-    private boolean adminMode = false;
+    //private boolean adminMode = false;
+
+    private String role = "passenger";
     private final JLabel secretLabel;
 
     public RegisterFrame(LoginFrame loginFrame) {
@@ -144,9 +147,9 @@ public class RegisterFrame extends JFrame {
     }
 
     private void toggleAdminMode() {
-        adminMode = !adminMode;
-        secretLabel.setVisible(adminMode);
-        if (adminMode) {
+        boolean isAdmin = !(Objects.equals(role, "manager"));
+        secretLabel.setVisible(isAdmin);
+        if (isAdmin) {
             JOptionPane.showMessageDialog(this,
                 "Admin mode activated!",
                 "Secret",
@@ -181,12 +184,12 @@ public class RegisterFrame extends JFrame {
 
         try {
             // Create user with admin status based on secret mode
-            User user = new User(0, name, surname, email, password, adminMode);
+            User user = new User(0, email, password, role);
             userService.register(user);
-            
+            boolean isAdmin = Objects.equals(role, "manager");
             JOptionPane.showMessageDialog(this,
                 "Registration successful! Please login." + 
-                (adminMode ? " (Admin privileges granted)" : ""),
+                (isAdmin ? " (Admin privileges granted)" : ""),
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
             handleCancel();

@@ -1,6 +1,7 @@
 package view;
 
 import model.Flight;
+import model.Passenger;
 import model.Ticket;
 import model.User;
 import service.FlightService;
@@ -127,39 +128,39 @@ public class PassengerListPanel extends JPanel{
         }
     }
 
-//    private void searchPassengers() {
-//        String searchTerm = searchField.getText().trim().toLowerCase();
-//        try {
-//            List<User> allPassengers = userService.getAllUsers();
-//            List<User> filteredPassengers = allPassengers.stream()
-//                    .filter(p -> !p.getRole().equals("ADMIN") && // Only show non-admin users
-//                            (p.getName().toLowerCase().contains(searchTerm) ||
-//                                    p.getSurname().toLowerCase().contains(searchTerm) ||
-//                                    p.getEmail().toLowerCase().contains(searchTerm)))
-//                    .toList();
-//            updatePassengerTableModel(filteredPassengers);
-//        } catch (SQLException e) {
-//            JOptionPane.showMessageDialog(this,
-//                    "Error searching passengers: " + e.getMessage(),
-//                    "Error",
-//                    JOptionPane.ERROR_MESSAGE);
-//            e.printStackTrace();
-//        }
-//    }
+    private void searchPassengers() {
+        String searchTerm = searchField.getText().trim().toLowerCase();
+        try {
+            List<Passenger> allPassengers = userService.getAllPassengers();
+            List<Passenger> filteredPassengers = allPassengers.stream()
+                    .filter(p -> !p.getRole().equals("manager") && // Only show non-admin users
+                            (p.getName().toLowerCase().contains(searchTerm) ||
+                                    p.getSurname().toLowerCase().contains(searchTerm) ||
+                                    p.getEmail().toLowerCase().contains(searchTerm)))
+                    .toList();
+            updatePassengerTableModel(filteredPassengers);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error searching passengers: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
 
-//    private void updatePassengerTableModel(List<User> passengers) {
-//        passengerTableModel.setRowCount(0);
-//        for (User passenger : passengers) {
-//            if (passenger.getRole() != "ADMIN") { // Only show non-admin users
-//                passengerTableModel.addRow(new Object[]{
-//                        passenger.getId(),
-//                        passenger.getName(),
-//                        passenger.getSurname(),
-//                        passenger.getEmail()
-//                });
-//            }
-//        }
-//    }
+    private void updatePassengerTableModel(List<Passenger> passengers) {
+        passengerTableModel.setRowCount(0);
+        for (Passenger passenger : passengers) {
+            if (passenger.getRole() != "ADMIN") { // Only show non-admin users
+                passengerTableModel.addRow(new Object[]{
+                        passenger.getId(),
+                        passenger.getName(),
+                        passenger.getSurname(),
+                        passenger.getEmail()
+                });
+            }
+        }
+    }
 
     private void loadSelectedPassengerTickets() {
         int selectedRow = passengerTable.getSelectedRow();

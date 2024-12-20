@@ -1,13 +1,11 @@
 package view;
 
 import model.Flight;
+import model.Passenger;
 import model.Ticket;
-import model.User;
 import service.FlightService;
 import service.TicketService;
 import service.UserService;
-import util.UIUpdateManager;
-import util.UIUpdateObserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class TicketListPanel extends JPanel implements UIUpdateObserver {
+public class TicketListPanel extends JPanel{
     private final TicketService ticketService;
     private final FlightService flightService;
     private final UserService userService;
@@ -71,27 +69,14 @@ public class TicketListPanel extends JPanel implements UIUpdateObserver {
 
         // Load initial data
         refreshTickets();
-
-        UIUpdateManager.getInstance().addObserver(this);
-    }
-
-    @Override
-    public void onUIUpdate(String updateType) {
-        if (updateType.equals(UIUpdateManager.TICKET_UPDATE)) {
-            refreshTickets();
-        }
-    }
-
-    public void cleanup() {
-        UIUpdateManager.getInstance().removeObserver(this);
     }
 
     private void refreshTickets() {
         try {
             List<Flight> flights = flightService.getAllFlights();
-            List<User> users = userService.getAllUsers();
+            List<Passenger> passengers = userService.getAllPassengers();
             List<Ticket> tickets = ticketService.getAllTickets();
-            updateTableModel(tickets, flights, users);
+            updateTableModel(tickets, flights, passengers);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
                 "Error loading tickets: " + e.getMessage(),
@@ -106,7 +91,7 @@ public class TicketListPanel extends JPanel implements UIUpdateObserver {
         
         try {
             List<Flight> flights = flightService.getAllFlights();
-            List<User> users = userService.getAllUsers();
+            List<Passenger> passengers = userService.getAllPassengers();
             List<Ticket> allTickets = ticketService.getAllTickets();
             
             List<Ticket> filteredTickets = allTickets.stream()
@@ -115,23 +100,23 @@ public class TicketListPanel extends JPanel implements UIUpdateObserver {
                         .filter(f -> f.getId() == ticket.getFlightId())
                         .findFirst()
                         .orElse(null);
-                    User user = users.stream()
+                    Passenger passenger = passengers.stream()
                         .filter(u -> u.getId() == ticket.getUserId())
                         .findFirst()
                         .orElse(null);
                     
-                    if (flight == null || user == null) return false;
+                    if (flight == null || passenger == null) return false;
                     
                     return flight.getFlightNumber().toLowerCase().contains(searchTerm) ||
                            flight.getDeparture().toLowerCase().contains(searchTerm) ||
                            flight.getDestination().toLowerCase().contains(searchTerm) ||
-                           user.getName().toLowerCase().contains(searchTerm) ||
-                           user.getSurname().toLowerCase().contains(searchTerm) ||
+                           passenger.getName().toLowerCase().contains(searchTerm) ||
+                           passenger.getSurname().toLowerCase().contains(searchTerm) ||
                            ticket.getSeatNumber().toLowerCase().contains(searchTerm);
                 })
                 .toList();
             
-            updateTableModel(filteredTickets, flights, users);
+            updateTableModel(filteredTickets, flights, passengers);
             
             if (filteredTickets.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -148,23 +133,23 @@ public class TicketListPanel extends JPanel implements UIUpdateObserver {
         }
     }
 
-    private void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<User> users) {
+    private void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<Passenger> passengers) {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             Flight flight = flights.stream()
                 .filter(f -> f.getId() == ticket.getFlightId())
                 .findFirst()
                 .orElse(null);
-            User user = users.stream()
+            Passenger passenger = passengers.stream()
                 .filter(u -> u.getId() == ticket.getUserId())
                 .findFirst()
                 .orElse(null);
             
-            if (flight != null && user != null) {
+            if (flight != null && passenger != null) {
                 tableModel.addRow(new Object[]{
                     ticket.getId(),
                     flight.getFlightNumber(),
-                    user.getName() + " " + user.getSurname(),
+                    passenger.getName() + " " + passenger.getSurname(),
                     flight.getDeparture(),
                     flight.getDestination(),
                     flight.getDepartureTime().format(formatter),
