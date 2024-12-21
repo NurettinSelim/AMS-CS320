@@ -127,8 +127,8 @@ public class ManageFlightsPanel extends JPanel {
             JTextField flightNumberField = new JTextField();
             JTextField departureField = new JTextField();
             JTextField destinationField = new JTextField();
-            JTextField departureDateField = new JTextField("YYYY-MM-DD HH:mm");
-            JTextField arrivalDateField = new JTextField("YYYY-MM-DD HH:mm");
+            JTextField departureDateField = new HintTextField("YYYY-MM-DD HH:mm",15);
+            JTextField arrivalDateField = new HintTextField("YYYY-MM-DD HH:mm",15);
             JComboBox<String> planeComboBox = new JComboBox<>(
                     planes.stream()
                             .map(Plane::getPlaneName)

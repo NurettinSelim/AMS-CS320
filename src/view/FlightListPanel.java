@@ -23,6 +23,7 @@ public class FlightListPanel extends JPanel {
     private final DefaultTableModel tableModel;
     private final JTextField departureField;
     private final JTextField destinationField;
+    private final JTextField timeField;
     private final JComboBox<String> seatTypeComboBox;
     private final MainFrame mainFrame;
 
@@ -36,14 +37,17 @@ public class FlightListPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        departureField = new JTextField(15);
-        destinationField = new JTextField(15);
+        departureField = new JTextField(12);
+        destinationField = new JTextField(12);
+        timeField = new HintTextField("yyyy-MM-dd HH:mm",13);
         JButton searchButton = new JButton("Search");
 
         searchPanel.add(new JLabel("From:"));
         searchPanel.add(departureField);
         searchPanel.add(new JLabel("To:"));
         searchPanel.add(destinationField);
+        searchPanel.add(new JLabel("Date/Time:"));
+        searchPanel.add(timeField);
         searchPanel.add(searchButton);
 
         String[] columns = {"Flight Number", "Departure", "Destination", "Departure Time",
