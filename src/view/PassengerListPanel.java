@@ -198,10 +198,10 @@ public class PassengerListPanel extends JPanel {
                         flight.getFlightNumber(),
                         flight.getDeparture(),
                         flight.getDestination(),
-                        flight.getDepartureTime().toString(),
+                        flight.getDepartureTime().format(formatter),
                         ticket.getSeatType(),
                         ticket.getSeatNumber(),
-                        String.format("$%.2f", ticket.getPrice())
+                        String.format("$%.2f", ticket.getPrice()),
                 });
             }
         }
@@ -217,7 +217,7 @@ public class PassengerListPanel extends JPanel {
             return;
         }
 
-        int ticketId = (int) ticketTableModel.getValueAt(selectedRow, 0);
+        int ticketId = (int) ticketTableModel.getValueAt(selectedRow, 7);
         String flightNumber = (String) ticketTableModel.getValueAt(selectedRow, 1);
 
         int choice = JOptionPane.showConfirmDialog(this,

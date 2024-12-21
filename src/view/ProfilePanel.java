@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProfilePanel extends JPanel {
@@ -77,7 +78,7 @@ public class ProfilePanel extends JPanel {
         JPanel ticketsPanel = new JPanel(new BorderLayout());
         ticketsPanel.setBorder(BorderFactory.createTitledBorder("My Tickets"));
 
-        String[] columns = {"Flight Number", "Departure", "Destination",
+        String[] columns = {"Ticket ID","Flight Number", "Departure", "Destination",
                 "Departure Time", "Seat Type", "Seat Number", "Price"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -121,9 +122,13 @@ public class ProfilePanel extends JPanel {
     private void updateTableModel(List<Ticket> tickets) {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             tableModel.addRow(new Object[]{
                     ticket.getId(),
                     ticket.getFlightId(),
+                    ticket.departure,
+                    ticket.destination,
+                    ticket.departureTime.format(formatter),
                     ticket.getSeatType(),
                     ticket.getSeatNumber(),
                     String.format("$%.2f", ticket.getPrice())
@@ -205,21 +210,8 @@ public class ProfilePanel extends JPanel {
     }
 
     private void saveChanges() {
-        //String newName = nameField.getText().trim();
-        //String newSurname = surnameField.getText().trim();
         String newEmail = emailField.getText().trim();
-
-//        if (newName.isEmpty() || newSurname.isEmpty() || newEmail.isEmpty()) {
-//            JOptionPane.showMessageDialog(this,
-//                "Please fill in all fields",
-//                "Error",
-//                JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-
         try {
-            //currentUser.setName(newName);
-            //currentUser.setSurname(newSurname);
             currentUser.setEmail(newEmail);
             userService.updateUser(currentUser);
             JOptionPane.showMessageDialog(this,
