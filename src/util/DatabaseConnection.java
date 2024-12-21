@@ -28,7 +28,9 @@ public class DatabaseConnection {
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             email TEXT UNIQUE NOT NULL,
                             password TEXT NOT NULL,
-                            role TEXT NOT NULL
+                            role TEXT NOT NULL,
+                            name TEXT NOT NULL,
+                            surname TEXT NOT NULL
                         )
                         """,
                 // Planes table
@@ -77,8 +79,8 @@ public class DatabaseConnection {
 
             // Insert admin user if not exists
             statement.execute("""
-                        INSERT OR IGNORE INTO users (email, password, role)
-                        VALUES ('admin@ams.com', 'admin', 'manager')
+                        INSERT OR IGNORE INTO users (email, password, role, name, surname)
+                        VALUES ('admin@ams.com', 'admin', 'manager','admin','admin')
                     """);
         }
     }

@@ -1,6 +1,5 @@
 package repository;
 
-import model.Passenger;
 import model.User;
 import util.DatabaseConnection;
 
@@ -15,8 +14,8 @@ public class UserRepository implements IUserRepository{
     @Override
     public User create(User user) throws SQLException {
         String query = """
-            INSERT INTO users (email, password, role)
-            VALUES (?, ?, ?)
+            INSERT INTO users (email, password, role, name, surname)
+            VALUES (?, ?, ?, ?, ?)
         """;
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -25,6 +24,8 @@ public class UserRepository implements IUserRepository{
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getRole());
+            stmt.setString(4, user.getName());
+            stmt.setString(5, user.getSurname());
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -56,7 +57,9 @@ public class UserRepository implements IUserRepository{
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getString("name"),
+                        rs.getString("surname")
                 );
             }
         }
@@ -97,7 +100,9 @@ public class UserRepository implements IUserRepository{
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getString("name"),
+                        rs.getString("surname")
                 ));
             }
         }
@@ -105,19 +110,20 @@ public class UserRepository implements IUserRepository{
     }
 
     @Override
-    public List<Passenger> findAllPassengers() throws SQLException {
+    public List<User> findAllPassengers() throws SQLException {
         String query = "SELECT * FROM users WHERE role = 'passenger'";
-        List<Passenger> passengers = new ArrayList<>();
+        List<User> passengers = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                passengers.add(new Passenger(
+                passengers.add(new User(
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password"),
+                        rs.getString("role"),
                         rs.getString("name"),
                         rs.getString("surname")
                 ));

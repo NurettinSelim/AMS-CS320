@@ -15,8 +15,8 @@ public class ProfilePanel extends JPanel {
     private final User currentUser;
     private final UserService userService;
     private final TicketService ticketService;
-    //private final JTextField nameField;
-    //private final JTextField surnameField;
+    private final JLabel nameField;
+    private final JLabel surnameField;
     private final JTextField emailField;
     private final JTable ticketTable;
     private final DefaultTableModel tableModel;
@@ -41,17 +41,17 @@ public class ProfilePanel extends JPanel {
         gbc.gridy = 0;
         profilePanel.add(new JLabel("Name:"), gbc);
 
-//        gbc.gridx = 1;
-//        nameField = new JTextField(user.getName(), 20);
-//        profilePanel.add(nameField, gbc);
+        gbc.gridx = 1;
+        nameField = new JLabel(user.getName());
+        profilePanel.add(nameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         profilePanel.add(new JLabel("Surname:"), gbc);
 
-//        gbc.gridx = 1;
-//        surnameField = new JTextField(user.getSurname(), 20);
-//        profilePanel.add(surnameField, gbc);
+        gbc.gridx = 1;
+        surnameField = new JLabel(user.getSurname());
+        profilePanel.add(surnameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;

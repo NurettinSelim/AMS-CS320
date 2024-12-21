@@ -1,7 +1,6 @@
 package view;
 
 import model.Flight;
-import model.Passenger;
 import model.Ticket;
 import model.User;
 import service.FlightService;
@@ -131,14 +130,14 @@ public class PassengerListPanel extends JPanel{
     private void searchPassengers() {
         String searchTerm = searchField.getText().trim().toLowerCase();
         try {
-            List<Passenger> allPassengers = userService.getAllPassengers();
-            List<Passenger> filteredPassengers = allPassengers.stream()
+            List<User> allPassengers = userService.getAllPassengers();
+            List<User> filteredPassengers = allPassengers.stream()
                     .filter(p -> !p.getRole().equals("manager") && // Only show non-admin users
                             (p.getName().toLowerCase().contains(searchTerm) ||
                                     p.getSurname().toLowerCase().contains(searchTerm) ||
                                     p.getEmail().toLowerCase().contains(searchTerm)))
                     .toList();
-            updatePassengerTableModel(filteredPassengers);
+            updateUserTableModel(filteredPassengers);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
                     "Error searching passengers: " + e.getMessage(),
@@ -148,15 +147,16 @@ public class PassengerListPanel extends JPanel{
         }
     }
 
-    private void updatePassengerTableModel(List<Passenger> passengers) {
+    private void updateUserTableModel(List<User> users) {
         passengerTableModel.setRowCount(0);
-        for (Passenger passenger : passengers) {
-            if (passenger.getRole() != "ADMIN") { // Only show non-admin users
+        for (User user : users) {
+            if (user.getRole() != "ADMIN") { // Only show non-admin users
                 passengerTableModel.addRow(new Object[]{
-                        passenger.getId(),
-                        passenger.getName(),
-                        passenger.getSurname(),
-                        passenger.getEmail()
+                        user.getId(),
+                        user.getName(),
+                        user.getSurname(),
+                        user.getEmail()
+
                 });
             }
         }

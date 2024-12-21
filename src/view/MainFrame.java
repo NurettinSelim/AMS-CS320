@@ -4,6 +4,7 @@ import model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class MainFrame extends JFrame {
     private final User currentUser;
@@ -31,7 +32,7 @@ public class MainFrame extends JFrame {
         profilePanel = new ProfilePanel(currentUser);
 
         contentPanel.add(new FlightListPanel(currentUser, this), "flights");
-        if (currentUser.getRole()=="manager") {
+        if (currentUser.getRole().equals("manager")) {
             contentPanel.add(new ManagePlanesPanel(), "planes");
             contentPanel.add(new ManageFlightsPanel(), "manage_flights");
             contentPanel.add(new PassengerListPanel(), "passengers");
@@ -58,7 +59,7 @@ public class MainFrame extends JFrame {
 
         addNavigationButton(sidebarPanel, "View Flights", "flights");
 
-        if (currentUser.getRole()=="manager") {
+        if (currentUser.getRole().equals("manager")) {
             addNavigationButton(sidebarPanel, "Manage Planes", "planes");
             addNavigationButton(sidebarPanel, "Manage Flights", "manage_flights");
             addNavigationButton(sidebarPanel, "View Passengers", "passengers");

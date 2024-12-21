@@ -185,7 +185,7 @@ public class RegisterFrame extends JFrame {
 
         try {
             // Create user with admin status based on secret mode
-            User user = new User(0, email, password, role);
+            User user = new User(0, email, password, role, name, surname);
             userService.register(user);
             boolean isAdmin = Objects.equals(role, "manager");
             JOptionPane.showMessageDialog(this,

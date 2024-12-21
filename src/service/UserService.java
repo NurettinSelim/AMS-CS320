@@ -1,12 +1,10 @@
 package service;
 
 import model.User;
-import model.Passenger;
 import repository.UserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public class UserService implements IUserService{
     private final UserRepository userRepository;
@@ -34,8 +32,8 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User register(int id, String email, String password, String role) throws SQLException {
-        return register(new User(0, email, password, role));
+    public User register(int id, String email, String password, String role, String name, String surname) throws SQLException {
+        return register(new User(0, email, password, "passenger", name, surname));
     }
 
     @Override
@@ -53,7 +51,7 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public List<Passenger> getAllPassengers() throws SQLException {
+    public List<User> getAllPassengers() throws SQLException {
         return userRepository.findAllPassengers();
     }
     @Override

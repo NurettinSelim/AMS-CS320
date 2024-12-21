@@ -1,8 +1,8 @@
 package view;
 
 import model.Flight;
-import model.Passenger;
 import model.Ticket;
+import model.User;
 import service.FlightService;
 import service.TicketService;
 import service.UserService;
@@ -74,7 +74,7 @@ public class TicketListPanel extends JPanel{
     private void refreshTickets() {
         try {
             List<Flight> flights = flightService.getAllFlights();
-            List<Passenger> passengers = userService.getAllPassengers();
+            List<User> passengers = userService.getAllPassengers();
             List<Ticket> tickets = ticketService.getAllTickets();
             updateTableModel(tickets, flights, passengers);
         } catch (SQLException e) {
@@ -91,7 +91,7 @@ public class TicketListPanel extends JPanel{
         
         try {
             List<Flight> flights = flightService.getAllFlights();
-            List<Passenger> passengers = userService.getAllPassengers();
+            List<User> passengers = userService.getAllPassengers();
             List<Ticket> allTickets = ticketService.getAllTickets();
             
             List<Ticket> filteredTickets = allTickets.stream()
@@ -100,7 +100,7 @@ public class TicketListPanel extends JPanel{
                         .filter(f -> f.getId() == ticket.getFlightId())
                         .findFirst()
                         .orElse(null);
-                    Passenger passenger = passengers.stream()
+                    User passenger = passengers.stream()
                         .filter(u -> u.getId() == ticket.getUserId())
                         .findFirst()
                         .orElse(null);
@@ -133,23 +133,23 @@ public class TicketListPanel extends JPanel{
         }
     }
 
-    private void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<Passenger> passengers) {
+    private void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<User> users) {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             Flight flight = flights.stream()
                 .filter(f -> f.getId() == ticket.getFlightId())
                 .findFirst()
                 .orElse(null);
-            Passenger passenger = passengers.stream()
+            User user = users.stream()
                 .filter(u -> u.getId() == ticket.getUserId())
                 .findFirst()
                 .orElse(null);
             
-            if (flight != null && passenger != null) {
+            if (flight != null && user != null) {
                 tableModel.addRow(new Object[]{
                     ticket.getId(),
                     flight.getFlightNumber(),
-                    passenger.getName() + " " + passenger.getSurname(),
+                    user.getName() + " " + user.getSurname(),
                     flight.getDeparture(),
                     flight.getDestination(),
                     flight.getDepartureTime().format(formatter),
