@@ -9,9 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 class FlightServiceTest {
@@ -36,11 +38,11 @@ class FlightServiceTest {
     @Test
     void createFlight() throws SQLException {
         Plane plane = new Plane(0, "Boeing 747", 200);
-        plane = planeRepository.create(plane); // Creating a plane for the test
+        plane = planeRepository.create(plane);
 
         String flightNumber = "FL123";
-        LocalDateTime departureTime = LocalDateTime.now().plusDays(1);
-        LocalDateTime arrivalTime = departureTime.plusHours(2);
+        Time departureTime = Time.valueOf(LocalTime.now().plusHours(1)); // Use Time for departure time
+        Time arrivalTime = Time.valueOf(departureTime.toLocalTime().plusHours(2)); // Use Time for arrival time
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 500;
@@ -70,8 +72,8 @@ class FlightServiceTest {
             ResultSet rs = stmt.executeQuery();
             assertTrue(rs.next());
             assertEquals(flightNumber, rs.getString("flight_number"));
-            assertEquals(departureTime, rs.getTimestamp("departure_time").toLocalDateTime());
-            assertEquals(arrivalTime, rs.getTimestamp("arrival_time").toLocalDateTime());
+            assertEquals(departureTime, rs.getTime("departure_time"));
+            assertEquals(arrivalTime, rs.getTime("arrival_time"));
             assertEquals(departure, rs.getString("departure"));
             assertEquals(destination, rs.getString("destination"));
             assertEquals(plane.getId(), rs.getInt("plane_id"));
@@ -85,22 +87,29 @@ class FlightServiceTest {
     @Test
     void createFlightWithInvalidPlane() {
         assertThrows(IllegalArgumentException.class, () -> {
-            flightService.createFlight("FL123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(2),
+            Time departureTime = Time.valueOf("10:00:00");
+            Time arrivalTime = Time.valueOf("12:00:00");
+
+            flightService.createFlight("FL123", departureTime, arrivalTime,
                     "New York", "Los Angeles", 999, 500, 1200, 150, 50);
         });
     }
+
 
     @Test
     void createFlightWhenPlaneIsNotAvailable() throws SQLException {
         Plane plane = new Plane(0, "Boeing 747", 200);
         plane = planeRepository.create(plane); // Create the plane
 
-        flightService.createFlight("FL123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(2),
+        Time departureTime = Time.valueOf("10:00:00");
+        Time arrivalTime = Time.valueOf("12:00:00");
+
+        flightService.createFlight("FL123", departureTime, arrivalTime,
                 "New York", "Los Angeles", plane.getId(), 500, 1200, 150, 50);
 
         Plane finalPlane = plane;
         assertThrows(IllegalArgumentException.class, () -> {
-            flightService.createFlight("FL124", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(2),
+            flightService.createFlight("FL124", departureTime, arrivalTime,
                     "New York", "San Francisco", finalPlane.getId(), 500, 1200, 150, 50);
         });
     }
@@ -109,15 +118,27 @@ class FlightServiceTest {
     void searchFlights() throws SQLException {
         String departure = "New York";
         String destination = "London";
-        LocalDateTime departureTime = LocalDateTime.of(2024, 12, 20, 15, 0);
+        Time departureTime = Time.valueOf("15:00:00");
 
-        Flight flight1 = new Flight(1, "AA100", departureTime, departureTime.plusHours(7), departure, destination, 101, 500.0, 1000.0, 50, 20);
-        Flight flight2 = new Flight(2, "BB200", departureTime.plusDays(1), departureTime.plusHours(8), departure, destination, 102, 600.0, 1100.0, 60, 25);
+        Flight flight1 = new Flight(1, "AA100", departureTime, Time.valueOf("22:00:00"), departure, destination, 101, 500.0, 1000.0, 50, 20);
+
+        Time flight2DepartureTime = new Time(departureTime.getTime() + 24 * 60 * 60 * 1000);
+        Time flight2ArrivalTime = new Time(flight2DepartureTime.getTime() + 8 * 60 * 60 * 1000);
+
+        Flight flight2 = new Flight(2, "BB200", flight2DepartureTime, flight2ArrivalTime, departure, destination, 102, 600.0, 1100.0, 60, 25);
+
 
         flightRepository.create(flight1);
         flightRepository.create(flight2);
 
+        System.out.println("Flight 1 created: " + flight1.getFlightNumber());
+
+
+        System.out.println("Flight 2 created: " + flight2.getFlightNumber());
+
         List<Flight> flights = flightService.searchFlights(departure, destination, departureTime);
+
+
 
         assertEquals(1, flights.size());
         assertEquals("AA100", flights.get(0).getFlightNumber());
@@ -125,8 +146,14 @@ class FlightServiceTest {
 
     @Test
     void getAllFlights() throws SQLException {
-        Flight flight1 = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
-        Flight flight2 = new Flight(2, "BB200", LocalDateTime.of(2024, 12, 21, 10, 0), LocalDateTime.of(2024, 12, 21, 17, 0), "New York", "Paris", 102, 600.0, 1100.0, 60, 25);
+        Time departureTime1 = Time.valueOf("15:00:00");
+        Time arrivalTime1 = Time.valueOf("22:00:00");
+
+        Time departureTime2 = Time.valueOf("10:00:00");
+        Time arrivalTime2 = Time.valueOf("17:00:00");
+
+        Flight flight1 = new Flight(1, "AA100", departureTime1, arrivalTime1, "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Flight flight2 = new Flight(2, "BB200", departureTime2, arrivalTime2, "New York", "Paris", 102, 600.0, 1100.0, 60, 25);
 
         flightRepository.create(flight1);
         flightRepository.create(flight2);
@@ -138,9 +165,13 @@ class FlightServiceTest {
         assertTrue(flights.stream().anyMatch(f -> f.getFlightNumber().equals("BB200")));
     }
 
+
     @Test
     void getFlightById() throws SQLException {
-        Flight flight = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = Time.valueOf("22:00:00");
+
+        Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         Flight retrievedFlight = flightService.getFlightById(flight.getId());
@@ -152,7 +183,13 @@ class FlightServiceTest {
 
     @Test
     void updateFlight() throws SQLException {
-        Flight flight = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Plane plane = new Plane(0, "Boeing 777", 300);
+        planeRepository.create(plane);
+
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = Time.valueOf("22:00:00");
+
+        Flight flight = new Flight(0, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         flight.setFlightNumber("AA101");
@@ -173,9 +210,14 @@ class FlightServiceTest {
         assertEquals(25, updatedFlight.getBusinessSeatsAvailable());
     }
 
+
+
     @Test
     void deleteFlight() throws SQLException {
-        Flight flight = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = Time.valueOf("22:00:00");
+
+        Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         flightService.deleteFlight(flight.getId());
@@ -187,7 +229,11 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats() throws SQLException {
-        Flight flight = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        // Use Time instead of LocalDateTime for departure and arrival times
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = Time.valueOf("22:00:00");
+
+        Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         flightService.updateFlightSeats(flight.getId(), "ECONOMY", 10);
@@ -201,6 +247,7 @@ class FlightServiceTest {
         assertEquals(15, updatedFlight.getBusinessSeatsAvailable());
     }
 
+
     @Test
     void updateFlightSeats_invalidFlightId() {
         assertThrows(IllegalArgumentException.class, () -> flightService.updateFlightSeats(999, "ECONOMY", 10));
@@ -208,12 +255,16 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats_notEnoughSeats() throws SQLException {
-        Flight flight = new Flight(1, "AA100", LocalDateTime.of(2024, 12, 20, 15, 0), LocalDateTime.of(2024, 12, 20, 22, 0), "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = Time.valueOf("22:00:00");
+
+        Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         assertThrows(IllegalArgumentException.class, () -> flightService.updateFlightSeats(flight.getId(), "ECONOMY", -60));
         assertThrows(IllegalArgumentException.class, () -> flightService.updateFlightSeats(flight.getId(), "BUSINESS", -25));
     }
+
 
     @Test
     void updateFlightSeats_invalidSeatType() {
@@ -226,6 +277,8 @@ class FlightServiceTest {
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate("DELETE FROM flights");
             stmt.executeUpdate("DELETE FROM planes");
+            stmt.executeUpdate("DELETE FROM users");
+            stmt.executeUpdate("DELETE FROM tickets");
         }
     }
 }

@@ -120,36 +120,58 @@ class PlaneServiceTest {
 
     @Test
     void isPlaneAvailable() throws SQLException {
-        Plane plane = new Plane(0, "Boeing 747", 200);
-        plane = planeService.createPlane(plane.getPlaneName(), plane.getCapacity());
+        Plane plane = planeService.createPlane("Boeing 747", 200);
 
-        LocalDateTime departureTime = LocalDateTime.now().plusDays(1);
-        LocalDateTime arrivalTime = departureTime.plusHours(2);
+        Time departureTime = Time.valueOf("15:00:00");
+        Time arrivalTime = new Time(departureTime.getTime() + 2 * 60 * 60 * 1000);
 
         boolean isAvailable = planeService.isPlaneAvailable(plane.getId(), departureTime, arrivalTime);
-
         assertTrue(isAvailable);
 
+        String departure = "New York";
+        String destination = "Los Angeles";
+        double economyPrice = 150.0;
+        double businessPrice = 300.0;
+        int economySeatsAvailable = 150;
+        int businessSeatsAvailable = 50;
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("INSERT INTO flights (plane_id, departure_time, arrival_time) VALUES (?, ?, ?)")) {
+             PreparedStatement stmt = conn.prepareStatement("""
+            INSERT INTO flights (plane_id, flight_number, departure_time, arrival_time, departure, destination, economy_price, business_price, economy_seats_available, business_seats_available) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """)) {
+
             stmt.setInt(1, plane.getId());
-            stmt.setTimestamp(2, Timestamp.valueOf(departureTime));
-            stmt.setTimestamp(3, Timestamp.valueOf(arrivalTime));
+            stmt.setString(2, "FL123");
+            stmt.setTime(3, departureTime);
+            stmt.setTime(4, arrivalTime);
+
+            stmt.setString(5,  departure);
+            stmt.setString(6, destination);
+
+            stmt.setDouble(7,economyPrice);
+            stmt.setDouble(8, businessPrice);
+            stmt.setInt(9, economySeatsAvailable);
+            stmt.setInt(10, businessSeatsAvailable);
+
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error inserting flight data", e);
         }
 
         isAvailable = planeService.isPlaneAvailable(plane.getId(), departureTime, arrivalTime);
-
         assertFalse(isAvailable);
     }
 
-
     @AfterEach
     void tearDown() throws SQLException {
-        // Clean up after each test if necessary
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate("DELETE FROM planes"); // Clean up after each test
+            stmt.executeUpdate("DELETE FROM flights");
+            stmt.executeUpdate("DELETE FROM planes");
+            stmt.executeUpdate("DELETE FROM users");
+            stmt.executeUpdate("DELETE FROM tickets");
         }
     }
 }

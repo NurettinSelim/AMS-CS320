@@ -3,14 +3,20 @@ package service;
 import model.Flight;
 import model.Plane;
 import model.Ticket;
+import model.User;
+import org.junit.jupiter.api.AfterEach;
 import repository.ITicketRepository;
 import repository.IFlightRepository;
 import repository.TicketRepository;
 import repository.FlightRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import util.DatabaseConnection;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,22 +28,30 @@ class TicketServiceTest {
     private IFlightRepository flightRepository;
     private ITicketRepository ticketRepository;
     private FlightService flightService;
+    private PlaneService planeService;
+    private UserService userService;
+
+
+
 
     @BeforeEach
     void setUp() {
-        // Initialize repositories and services
         ticketRepository = new TicketRepository();
         flightRepository = new FlightRepository();
         flightService = new FlightService();
         ticketService = new TicketService();
+        planeService = new PlaneService();
+        userService = new UserService();
     }
 
     @Test
     void purchaseTicket_validDetails_createsTicket() throws SQLException {
-        int planeId = 1;
-        Plane plane = new Plane(planeId, "Boeing 747", 200); // Assuming the plane details
-        flightService.createFlight("FL123", LocalDateTime.of(2024, 12, 20, 14, 0),
-                LocalDateTime.of(2024, 12, 20, 16, 0), "New York", "Los Angeles", planeId,
+
+        Plane plane = planeService.createPlane( "Boeing 747", 200);
+        Time departureTime = Time.valueOf("14:00:00");
+        Time arrivalTime = Time.valueOf("16:00:00");
+
+        flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 150, 50);
 
         Flight flight = flightRepository.findAll().get(0);
@@ -61,13 +75,16 @@ class TicketServiceTest {
         });
     }
 
+
     @Test
     void purchaseTicket_noAvailableSeats() throws SQLException {
-        int planeId = 1;
-        Plane plane = new Plane(planeId, "Boeing 747", 200);
-        Flight flight = flightService.createFlight("FL123", LocalDateTime.of(2024, 12, 20, 14, 0),
-                LocalDateTime.of(2024, 12, 20, 16, 0), "New York", "Los Angeles", planeId,
-                100.0, 200.0, 0, 0);  // Setting zero capacity for both seat types
+        Plane plane = planeService.createPlane("Boeing 747", 200);
+        Time departureTime = Time.valueOf("14:00:00");
+        Time arrivalTime = Time.valueOf("16:00:00");
+
+        Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
+                100.0, 200.0, 0, 0);
+
 
         assertThrows(IllegalArgumentException.class, () -> {
             ticketService.purchaseTicket(flight.getId(), 1, "ECONOMY");
@@ -106,29 +123,70 @@ class TicketServiceTest {
 
     @Test
     void cancelTicket() throws SQLException {
-        int ticketId = 1;
-        Ticket ticket = ticketRepository.findById(ticketId);
-        int originalSeatCount = (ticket.getSeatType().equals("ECONOMY"))
-                ? flightService.getFlightById(ticket.getFlightId()).getEconomySeatsAvailable()
-                : flightService.getFlightById(ticket.getFlightId()).getBusinessSeatsAvailable();
+        // Create a plane for the flight
+        Plane plane = new Plane(0, "Boeing 747", 200); // Plane ID will be auto-generated
+        Plane createdPlane = planeService.createPlane(plane.getPlaneName(), plane.getCapacity());
 
+        // Create a flight with the created plane
+        String flightNumber = "FL123";
+        Time departureTime = Time.valueOf("14:00:00");
+        Time arrivalTime = Time.valueOf("16:00:00");
+        String departure = "New York";
+        String destination = "Los Angeles";
+        double economyPrice = 100.0;
+        double businessPrice = 200.0;
+        int economySeatsAvailable = 150;
+        int businessSeatsAvailable = 50;
+
+        Flight createdFlight = flightService.createFlight(
+                flightNumber, departureTime, arrivalTime, departure, destination, createdPlane.getId(),
+                economyPrice, businessPrice, economySeatsAvailable, businessSeatsAvailable
+        );
+
+        // Create a user
+        User createdUser = userService.register(0, "email3@example.com", "password123", "passenger", "John", "Doe");
+
+        // Purchase a ticket for the created flight and user
+        Ticket ticket = ticketService.purchaseTicket(createdFlight.getId(), createdUser.getId(), "ECONOMY");
+
+        // Get the ticket ID for cancellation
+        int ticketId = ticket.getId();
+
+        // Get the original seat count for the flight
+        Flight flight = flightService.getFlightById(createdFlight.getId());
+        int originalSeatCount = flight.getEconomySeatsAvailable();
+
+        System.out.println("Ticket count before cancellation: " + ticketService.getAllTickets());
         ticketService.cancelTicket(ticketId);
+        System.out.println("Ticket count after cancellation: " + ticketService.getAllTickets());
 
+
+
+        // Verify the ticket is cancelled
         Ticket cancelledTicket = ticketRepository.findById(ticketId);
-        assertNull(cancelledTicket);
+        assertNull(cancelledTicket); // Ticket should be removed
 
-        Flight flight = flightService.getFlightById(ticket.getFlightId());
-        int updatedSeatCount = (ticket.getSeatType().equals("ECONOMY"))
-                ? flight.getEconomySeatsAvailable()
-                : flight.getBusinessSeatsAvailable();
-
-        assertEquals(originalSeatCount + 1, updatedSeatCount);
+        // Verify the seat count has increased by 1
+        int updatedSeatCount = flight.getEconomySeatsAvailable();
+        assertEquals(originalSeatCount , updatedSeatCount+1);
     }
 
     @Test
     void cancelTicket_invalidTicketId() {
         int invalidTicketId = -1;
         assertThrows(IllegalArgumentException.class, () -> ticketService.cancelTicket(invalidTicketId));
+    }
+
+    @AfterEach
+    void tearDown() throws SQLException {
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM flights");
+            stmt.executeUpdate("DELETE FROM planes");
+            stmt.executeUpdate("DELETE FROM users");
+            stmt.executeUpdate("DELETE FROM tickets");
+
+        }
     }
 
 }

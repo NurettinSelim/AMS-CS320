@@ -1,11 +1,16 @@
 package service;
 
 import model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.UserRepository;
+import util.DatabaseConnection;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +30,7 @@ public class UserServiceTest {
     void authenticate() throws SQLException {
         String email = "test@example.com";
         String password = "password123";
-        User user = new User(1, email, password, "USER");
+        User user = new User(1, email, password, "passenger","oscar", "isaac");
 
         userRepository.create(user);
 
@@ -41,7 +46,7 @@ public class UserServiceTest {
     void authenticate_invalidCredentials() throws SQLException {
         String email = "test@example.com";
         String password = "wrongPassword";
-        User user = new User(1, "test@example.com", "password123", "USER");
+        User user = new User(1, "test@example.com", "password123", "passenger", "oscar", "isaac");
 
         userRepository.create(user);
 
@@ -62,7 +67,7 @@ public class UserServiceTest {
 
     @Test
     void register() throws SQLException {
-        User user = new User(0, "newuser@example.com", "password123", "USER");
+        User user = new User(0, "newuser@example.com", "password123", "USER", "oscar", "isaac");
 
         User createdUser = userService.register(user);
 
@@ -73,17 +78,17 @@ public class UserServiceTest {
 
     @Test
     void register_emailAlreadyExists() throws SQLException {
-        User existingUser = new User(0, "existinguser@example.com", "password123", "USER");
+        User existingUser = new User(0, "existinguser@example.com", "password123", "passenger","oscar", "isaac");
         userRepository.create(existingUser);
 
-        User newUser = new User(0, "existinguser@example.com", "password456", "USER");
+        User newUser = new User(0, "existinguser@example.com", "password456", "passenger","oscar", "isaac");
 
         assertThrows(IllegalArgumentException.class, () -> userService.register(newUser));
     }
 
     @Test
     void updateUser() throws SQLException {
-        User existingUser = new User(1, "user@example.com", "password123", "USER");
+        User existingUser = new User(1, "user@example.com", "password123", "passenger","oscar", "isaac");
         userRepository.create(existingUser);
 
         existingUser.setPassword("newpassword123");
@@ -96,10 +101,10 @@ public class UserServiceTest {
 
     @Test
     void updateUser_emailAlreadyExists() throws SQLException {
-        User existingUser1 = new User(1, "user1@example.com", "password123", "USER");
+        User existingUser1 = new User(1, "user1@example.com", "password123", "passenger","oscar", "isaac");
         userRepository.create(existingUser1);
 
-        User existingUser2 = new User(2, "user2@example.com", "password456", "USER");
+        User existingUser2 = new User(2, "user2@example.com", "password456", "passenger","oscar", "isaac");
         userRepository.create(existingUser2);
 
         existingUser1.setEmail("user2@example.com");
@@ -109,8 +114,8 @@ public class UserServiceTest {
 
     @Test
     void getAllUsers() throws SQLException {
-        User user1 = new User(1, "user1@example.com", "password123", "USER");
-        User user2 = new User(2, "user2@example.com", "password456", "ADMIN");
+        User user1 = new User(1, "user1@example.com", "password123", "passenger","oscar", "isaac");
+        User user2 = new User(2, "user2@example.com", "password456", "manager","jennifer", "lawrence");
 
         userRepository.create(user1);
         userRepository.create(user2);
@@ -124,7 +129,7 @@ public class UserServiceTest {
 
     @Test
     void deleteUser() throws SQLException {
-        User user = new User(1, "user1@example.com", "password123", "USER");
+        User user = new User(1, "user1@example.com", "password123", "passenger","oscar", "isaac");
 
         userRepository.create(user);
         userService.deleteUser(user.getId());
@@ -133,5 +138,17 @@ public class UserServiceTest {
         assertNull(deletedUser);
     }
 
+    @AfterEach
+    void tearDown() throws SQLException {
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM flights");
+            stmt.executeUpdate("DELETE FROM planes");
+            stmt.executeUpdate("DELETE FROM users");
+            stmt.executeUpdate("DELETE FROM tickets");
+
+
+        }
+    }
 
 }

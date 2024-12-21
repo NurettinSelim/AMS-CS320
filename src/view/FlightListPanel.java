@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -100,7 +101,8 @@ public class FlightListPanel extends JPanel {
         }
 
         try {
-            List<Flight> flights = flightService.searchFlights(departure, destination, LocalDateTime.now());
+            Time currentTime = new Time(System.currentTimeMillis());
+            List<Flight> flights = flightService.searchFlights(departure, destination, currentTime);
             updateTableModel(flights);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
@@ -120,8 +122,8 @@ public class FlightListPanel extends JPanel {
                     flight.getFlightNumber(),
                     flight.getDeparture(),
                     flight.getDestination(),
-                    flight.getDepartureTime().format(formatter),
-                    flight.getArrivalTime().format(formatter),
+                    flight.getDepartureTime().toString(),
+                    flight.getArrivalTime().toString(),
                     String.format("$%.2f", flight.getEconomyPrice()),
                     String.format("$%.2f", flight.getBusinessPrice()),
                     flight.getEconomySeatsAvailable(),

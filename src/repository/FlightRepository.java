@@ -22,8 +22,8 @@ public class FlightRepository implements IFlightRepository{
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, flight.getFlightNumber());
-            stmt.setTimestamp(2, Timestamp.valueOf(flight.getDepartureTime()));
-            stmt.setTimestamp(3, Timestamp.valueOf(flight.getArrivalTime()));
+            stmt.setTimestamp(2, new Timestamp(flight.getDepartureTime().getTime()));
+            stmt.setTimestamp(3, new Timestamp(flight.getArrivalTime().getTime()));
             stmt.setString(4, flight.getDeparture());
             stmt.setString(5, flight.getDestination());
             stmt.setInt(6, flight.getPlaneId());
@@ -96,8 +96,8 @@ public class FlightRepository implements IFlightRepository{
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, flight.getFlightNumber());
-            stmt.setTimestamp(2, Timestamp.valueOf(flight.getDepartureTime()));
-            stmt.setTimestamp(3, Timestamp.valueOf(flight.getArrivalTime()));
+            stmt.setTimestamp(2, new Timestamp(flight.getDepartureTime().getTime()));
+            stmt.setTimestamp(3, new Timestamp(flight.getArrivalTime().getTime()));
             stmt.setString(4, flight.getDeparture());
             stmt.setString(5, flight.getDestination());
             stmt.setInt(6, flight.getPlaneId());
@@ -123,7 +123,7 @@ public class FlightRepository implements IFlightRepository{
     }
 
     @Override
-    public List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) throws SQLException {
+    public List<Flight> searchFlights(String departure, String destination, Time departureTime) throws SQLException {
         String query = """
             SELECT * FROM flights 
             WHERE departure = ? 
@@ -137,7 +137,8 @@ public class FlightRepository implements IFlightRepository{
 
             stmt.setString(1, departure);
             stmt.setString(2, destination);
-            stmt.setTimestamp(3, Timestamp.valueOf(departureTime));
+            stmt.setTime(3, departureTime);
+
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -151,8 +152,8 @@ public class FlightRepository implements IFlightRepository{
         return new Flight(
                 rs.getInt("id"),
                 rs.getString("flight_number"),
-                rs.getTimestamp("departure_time").toLocalDateTime(),
-                rs.getTimestamp("arrival_time").toLocalDateTime(),
+                rs.getTime("departure_time"),
+                rs.getTime("arrival_time"),
                 rs.getString("departure"),
                 rs.getString("destination"),
                 rs.getInt("plane_id"),

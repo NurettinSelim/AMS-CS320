@@ -1,12 +1,13 @@
 package model;
 
-import java.time.LocalDateTime;
+
+import java.sql.Time;
 
 public class Flight {
     private int id;
     private String flightNumber;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private Time departureTime;
+    private Time arrivalTime;
     private String departure;
     private String destination;
     private int planeId;
@@ -15,7 +16,7 @@ public class Flight {
     private int economySeatsAvailable;
     private int businessSeatsAvailable;
 
-    public Flight(int id, String flightNumber, LocalDateTime departureTime, LocalDateTime arrivalTime,
+    public Flight(int id, String flightNumber, Time departureTime, Time arrivalTime,
             String departure, String destination, int planeId, double economyPrice,
             double businessPrice, int economySeatsAvailable, int businessSeatsAvailable) {
         this.id = id;
@@ -48,19 +49,19 @@ public class Flight {
         this.flightNumber = flightNumber;
     }
 
-    public LocalDateTime getDepartureTime() {
+    public Time getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
+    public void setDepartureTime(Time departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalDateTime getArrivalTime() {
+    public Time getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime) {
+    public void setArrivalTime(Time arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 

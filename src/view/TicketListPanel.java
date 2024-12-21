@@ -152,7 +152,7 @@ public class TicketListPanel extends JPanel{
                     user.getName() + " " + user.getSurname(),
                     flight.getDeparture(),
                     flight.getDestination(),
-                    flight.getDepartureTime().format(formatter),
+                    flight.getDepartureTime().toString(),
                     ticket.getSeatType(),
                     ticket.getSeatNumber(),
                     String.format("$%.2f", ticket.getPrice())

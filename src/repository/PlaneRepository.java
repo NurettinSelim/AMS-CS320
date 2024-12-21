@@ -107,28 +107,28 @@ public class PlaneRepository implements IPlaneRepository{  //changed
             stmt.executeUpdate();
         }
     }
-    public boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime)
+    public boolean isPlaneAvailable(int planeId, Time departureTime, Time arrivalTime)
             throws SQLException {
         String query = """
-            SELECT COUNT(*) as count FROM flights 
-            WHERE plane_id = ? 
-            AND (
-                (departure_time BETWEEN ? AND ?) OR
-                (arrival_time BETWEEN ? AND ?) OR
-                (departure_time <= ? AND arrival_time >= ?)
-            )
-        """;
+        SELECT COUNT(*) as count FROM flights 
+        WHERE plane_id = ? 
+        AND (
+            (departure_time BETWEEN ? AND ?) OR
+            (arrival_time BETWEEN ? AND ?) OR
+            (departure_time <= ? AND arrival_time >= ?)
+        )
+    """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, planeId);
-            stmt.setTimestamp(2, Timestamp.valueOf(departureTime));
-            stmt.setTimestamp(3, Timestamp.valueOf(arrivalTime));
-            stmt.setTimestamp(4, Timestamp.valueOf(departureTime));
-            stmt.setTimestamp(5, Timestamp.valueOf(arrivalTime));
-            stmt.setTimestamp(6, Timestamp.valueOf(departureTime));
-            stmt.setTimestamp(7, Timestamp.valueOf(arrivalTime));
+            stmt.setTime(2, departureTime);
+            stmt.setTime(3, arrivalTime);
+            stmt.setTime(4, departureTime);
+            stmt.setTime(5, arrivalTime);
+            stmt.setTime(6, departureTime);
+            stmt.setTime(7, arrivalTime);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

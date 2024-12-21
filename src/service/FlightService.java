@@ -6,9 +6,8 @@ import repository.FlightRepository;
 import repository.PlaneRepository;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.sql.Time;
 import java.util.List;
-import java.util.Optional;
 
 public class FlightService implements IFlightService {
 
@@ -20,7 +19,7 @@ public class FlightService implements IFlightService {
         this.planeRepository = new PlaneRepository();
     }
     @Override
-    public Flight createFlight(String flightNumber, LocalDateTime departureTime, LocalDateTime arrivalTime,
+    public Flight createFlight(String flightNumber, Time departureTime, Time arrivalTime,
                                String departure, String destination, int planeId, double economyPrice,
                                double businessPrice, int economyCapacity, int businessCapacity) throws SQLException {
                                                         //capacity parametrelerini ekledim
@@ -41,7 +40,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) throws SQLException {
+    public List<Flight> searchFlights(String departure, String destination, Time departureTime) throws SQLException {
         return flightRepository.searchFlights(departure, destination, departureTime);
     }
 

@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository implements IUserRepository{
+
     @Override
     public User create(User user) throws SQLException {
         String query = """
-            INSERT INTO users (email, password, role, name, surname)
-            VALUES (?, ?, ?, ?, ?)
-        """;
+        INSERT INTO users (email, password, role, name, surname)
+        VALUES (?, ?, ?, ?, ?)
+    """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -39,9 +40,11 @@ public class UserRepository implements IUserRepository{
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
+            System.out.println("User created: " + user);  // Add this line for debugging
         }
         return user;
     }
+
 
     @Override
     public User findByEmail(String email) throws SQLException {
