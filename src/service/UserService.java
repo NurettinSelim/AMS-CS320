@@ -35,7 +35,7 @@ public class UserService implements IUserService{
 
     @Override
     public User register(int id, String email, String password, String role) throws SQLException {
-        return register(new User(0, email, password, "passenger"));
+        return register(new User(0, email, password, role));
     }
 
     @Override

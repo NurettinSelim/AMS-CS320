@@ -148,6 +148,7 @@ public class RegisterFrame extends JFrame {
 
     private void toggleAdminMode() {
         boolean isAdmin = !(Objects.equals(role, "manager"));
+        role = "manager";
         secretLabel.setVisible(isAdmin);
         if (isAdmin) {
             JOptionPane.showMessageDialog(this,
