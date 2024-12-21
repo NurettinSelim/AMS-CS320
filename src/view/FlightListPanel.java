@@ -37,7 +37,7 @@ public class FlightListPanel extends JPanel {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         departureField = new JTextField(12);
         destinationField = new JTextField(12);
-        timeField = new HintTextField("yyyy-MM-dd HH:mm",13);
+        timeField = new HintTextField("yyyy-MM-dd HH:mm", 13);
         JButton searchButton = new JButton("Search");
 
         searchPanel.add(new JLabel("From:"));
@@ -78,7 +78,7 @@ public class FlightListPanel extends JPanel {
         refreshFlights();
     }
 
-    private void refreshFlights() {
+    void refreshFlights() {
         try {
             List<Flight> flights = flightService.getAllFlights();
             updateTableModel(flights);
@@ -104,8 +104,8 @@ public class FlightListPanel extends JPanel {
         }
 
         try {
-            LocalDateTime currentTime = LocalDateTime.now();
-            List<Flight> flights = flightService.searchFlights(departure, destination, currentTime);
+            LocalDateTime departureTime = LocalDateTime.parse(timeField.getText().trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            List<Flight> flights = flightService.searchFlights(departure, destination, departureTime);
             updateTableModel(flights);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
@@ -125,8 +125,8 @@ public class FlightListPanel extends JPanel {
                     flight.getFlightNumber(),
                     flight.getDeparture(),
                     flight.getDestination(),
-                    flight.getDepartureTime().toString(),
-                    flight.getArrivalTime().toString(),
+                    flight.getDepartureTime().format(formatter),
+                    flight.getArrivalTime().format(formatter),
                     String.format("$%.2f", flight.getEconomyPrice()),
                     String.format("$%.2f", flight.getBusinessPrice()),
                     flight.getEconomySeatsAvailable(),
@@ -175,7 +175,6 @@ public class FlightListPanel extends JPanel {
                     JOptionPane.INFORMATION_MESSAGE);
 
             refreshFlights();
-            mainFrame.refreshTickets();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,

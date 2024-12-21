@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
     private final JPanel contentPanel;
     private final CardLayout cardLayout;
     private final ProfilePanel profilePanel;
+    private final FlightListPanel flightListPanel;
 
     public MainFrame(User user) {
         this.currentUser = user;
@@ -29,6 +30,7 @@ public class MainFrame extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         profilePanel = new ProfilePanel(currentUser);
+        flightListPanel = new FlightListPanel(currentUser, this);
 
         contentPanel.add(new FlightListPanel(currentUser, this), "flights");
         if (currentUser.getRole().equals("manager")) {
@@ -41,11 +43,6 @@ public class MainFrame extends JFrame {
         cardLayout.show(contentPanel, "flights");
     }
 
-    public void refreshTickets() {
-        if (profilePanel != null) {
-            profilePanel.refreshTickets();
-        }
-    }
 
     private JPanel createSidebarPanel() {
         JPanel sidebarPanel = new JPanel();
@@ -79,7 +76,12 @@ public class MainFrame extends JFrame {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height));
-        button.addActionListener(e -> cardLayout.show(contentPanel, cardName));
+        button.addActionListener(e -> {
+            if ("flights".equals(cardName)) {
+                flightListPanel.refreshFlights();
+            }
+            cardLayout.show(contentPanel, cardName);
+        });
         panel.add(button);
         panel.add(Box.createVerticalStrut(5));
     }

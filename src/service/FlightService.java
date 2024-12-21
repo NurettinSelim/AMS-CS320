@@ -18,11 +18,12 @@ public class FlightService implements IFlightService {
         this.flightRepository = new FlightRepository();
         this.planeRepository = new PlaneRepository();
     }
+
     @Override
     public Flight createFlight(String flightNumber, LocalDateTime departureTime, LocalDateTime arrivalTime,
                                String departure, String destination, int planeId, double economyPrice,
                                double businessPrice, int economyCapacity, int businessCapacity) throws SQLException {
-                                                        //capacity parametrelerini ekledim
+        //capacity parametrelerini ekledim
 
         Plane plane = planeRepository.findById(planeId);
         if (plane == null || plane.isEmpty()) {

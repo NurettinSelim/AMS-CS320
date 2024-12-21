@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlightRepository implements IFlightRepository{
+public class FlightRepository implements IFlightRepository {
     @Override
     public Flight create(Flight flight) throws SQLException {
         String query = """
-            INSERT INTO flights (flight_number, departure_time, arrival_time, departure, 
-                               destination, plane_id, economy_price, business_price, 
-                               economy_seats_available, business_seats_available)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """;
+                    INSERT INTO flights (flight_number, departure_time, arrival_time, departure, 
+                                       destination, plane_id, economy_price, business_price, 
+                                       economy_seats_available, business_seats_available)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -84,13 +84,13 @@ public class FlightRepository implements IFlightRepository{
     @Override
     public void update(Flight flight) throws SQLException {
         String query = """
-            UPDATE flights 
-            SET flight_number = ?, departure_time = ?, arrival_time = ?, 
-                departure = ?, destination = ?, plane_id = ?, 
-                economy_price = ?, business_price = ?,
-                economy_seats_available = ?, business_seats_available = ?
-            WHERE id = ?
-        """;
+                    UPDATE flights 
+                    SET flight_number = ?, departure_time = ?, arrival_time = ?, 
+                        departure = ?, destination = ?, plane_id = ?, 
+                        economy_price = ?, business_price = ?,
+                        economy_seats_available = ?, business_seats_available = ?
+                    WHERE id = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -125,10 +125,10 @@ public class FlightRepository implements IFlightRepository{
     @Override
     public List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) throws SQLException {
         String query = """
-            SELECT * FROM flights 
-            WHERE departure = ? 
-            AND destination = ? 
-        """;
+                    SELECT * FROM flights 
+                    WHERE departure = ? 
+                    AND destination = ? 
+                """;
 
         List<Flight> flights = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection();

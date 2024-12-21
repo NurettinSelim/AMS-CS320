@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class TicketListPanel extends JPanel{
+public class TicketListPanel extends JPanel {
     private final TicketService ticketService;
     private final FlightService flightService;
     private final UserService userService;
@@ -41,8 +41,8 @@ public class TicketListPanel extends JPanel{
         searchPanel.add(searchButton);
 
         // Create table
-        String[] columns = {"Ticket ID", "Flight Number", "Passenger Name", "Departure", 
-                          "Destination", "Departure Time", "Seat Type", "Seat Number", "Price"};
+        String[] columns = {"Ticket ID", "Flight Number", "Passenger Name", "Departure",
+                "Destination", "Departure Time", "Seat Type", "Seat Number", "Price"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -79,56 +79,56 @@ public class TicketListPanel extends JPanel{
             updateTableModel(tickets, flights, passengers);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
-                "Error loading tickets: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Error loading tickets: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
     private void searchTickets() {
         String searchTerm = searchField.getText().trim().toLowerCase();
-        
+
         try {
             List<Flight> flights = flightService.getAllFlights();
             List<User> passengers = userService.getAllPassengers();
             List<Ticket> allTickets = ticketService.getAllTickets();
-            
+
             List<Ticket> filteredTickets = allTickets.stream()
-                .filter(ticket -> {
-                    Flight flight = flights.stream()
-                        .filter(f -> f.getId() == ticket.getFlightId())
-                        .findFirst()
-                        .orElse(null);
-                    User passenger = passengers.stream()
-                        .filter(u -> u.getId() == ticket.getUserId())
-                        .findFirst()
-                        .orElse(null);
-                    
-                    if (flight == null || passenger == null) return false;
-                    
-                    return flight.getFlightNumber().toLowerCase().contains(searchTerm) ||
-                           flight.getDeparture().toLowerCase().contains(searchTerm) ||
-                           flight.getDestination().toLowerCase().contains(searchTerm) ||
-                           passenger.getName().toLowerCase().contains(searchTerm) ||
-                           passenger.getSurname().toLowerCase().contains(searchTerm) ||
-                           ticket.getSeatNumber().toLowerCase().contains(searchTerm);
-                })
-                .toList();
-            
+                    .filter(ticket -> {
+                        Flight flight = flights.stream()
+                                .filter(f -> f.getId() == ticket.getFlightId())
+                                .findFirst()
+                                .orElse(null);
+                        User passenger = passengers.stream()
+                                .filter(u -> u.getId() == ticket.getUserId())
+                                .findFirst()
+                                .orElse(null);
+
+                        if (flight == null || passenger == null) return false;
+
+                        return flight.getFlightNumber().toLowerCase().contains(searchTerm) ||
+                                flight.getDeparture().toLowerCase().contains(searchTerm) ||
+                                flight.getDestination().toLowerCase().contains(searchTerm) ||
+                                passenger.getName().toLowerCase().contains(searchTerm) ||
+                                passenger.getSurname().toLowerCase().contains(searchTerm) ||
+                                ticket.getSeatNumber().toLowerCase().contains(searchTerm);
+                    })
+                    .toList();
+
             updateTableModel(filteredTickets, flights, passengers);
-            
+
             if (filteredTickets.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                    "No tickets found matching the search criteria",
-                    "Search Results",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "No tickets found matching the search criteria",
+                        "Search Results",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
-                "Error searching tickets: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Error searching tickets: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -137,25 +137,25 @@ public class TicketListPanel extends JPanel{
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             Flight flight = flights.stream()
-                .filter(f -> f.getId() == ticket.getFlightId())
-                .findFirst()
-                .orElse(null);
+                    .filter(f -> f.getId() == ticket.getFlightId())
+                    .findFirst()
+                    .orElse(null);
             User user = users.stream()
-                .filter(u -> u.getId() == ticket.getUserId())
-                .findFirst()
-                .orElse(null);
-            
+                    .filter(u -> u.getId() == ticket.getUserId())
+                    .findFirst()
+                    .orElse(null);
+
             if (flight != null && user != null) {
                 tableModel.addRow(new Object[]{
-                    ticket.getId(),
-                    flight.getFlightNumber(),
-                    user.getName() + " " + user.getSurname(),
-                    flight.getDeparture(),
-                    flight.getDestination(),
-                    flight.getDepartureTime().toString(),
-                    ticket.getSeatType(),
-                    ticket.getSeatNumber(),
-                    String.format("$%.2f", ticket.getPrice())
+                        ticket.getId(),
+                        flight.getFlightNumber(),
+                        user.getName() + " " + user.getSurname(),
+                        flight.getDeparture(),
+                        flight.getDestination(),
+                        flight.getDepartureTime().toString(),
+                        ticket.getSeatType(),
+                        ticket.getSeatNumber(),
+                        String.format("$%.2f", ticket.getPrice())
                 });
             }
         }
@@ -165,9 +165,9 @@ public class TicketListPanel extends JPanel{
         int selectedRow = ticketTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
-                "Please select a ticket to cancel",
-                "Cancel Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Please select a ticket to cancel",
+                    "Cancel Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -176,24 +176,24 @@ public class TicketListPanel extends JPanel{
         String passengerName = (String) tableModel.getValueAt(selectedRow, 2);
 
         int choice = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to cancel ticket for flight " + flightNumber + 
-            " booked by " + passengerName + "?",
-            "Confirm Cancellation",
-            JOptionPane.YES_NO_OPTION);
+                "Are you sure you want to cancel ticket for flight " + flightNumber +
+                        " booked by " + passengerName + "?",
+                "Confirm Cancellation",
+                JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) {
             try {
                 ticketService.cancelTicket(ticketId);
                 refreshTickets();
                 JOptionPane.showMessageDialog(this,
-                    "Ticket cancelled successfully",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Ticket cancelled successfully",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this,
-                    "Error cancelling ticket: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        "Error cancelling ticket: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }

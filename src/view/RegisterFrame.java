@@ -29,11 +29,11 @@ public class RegisterFrame extends JFrame {
         this.userService = new UserService();
 
         // Add key listener for secret admin mode (Ctrl + Alt + A)
-        KeyStroke adminKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_A, 
-            InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
-        
-        getRootPane().registerKeyboardAction(e -> toggleAdminMode(), 
-            adminKeyStroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        KeyStroke adminKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_A,
+                InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK);
+
+        getRootPane().registerKeyboardAction(e -> toggleAdminMode(),
+                adminKeyStroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
         setTitle("AMS - Register");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -111,7 +111,7 @@ public class RegisterFrame extends JFrame {
         // Create buttons with specific sizes
         JButton registerButton = new JButton("Register");
         JButton cancelButton = new JButton("Cancel");
-        
+
         // Set preferred size for buttons
         Dimension buttonSize = new Dimension(100, 30);
         registerButton.setPreferredSize(buttonSize);
@@ -152,9 +152,9 @@ public class RegisterFrame extends JFrame {
         secretLabel.setVisible(isAdmin);
         if (isAdmin) {
             JOptionPane.showMessageDialog(this,
-                "Admin mode activated!",
-                "Secret",
-                JOptionPane.INFORMATION_MESSAGE);
+                    "Admin mode activated!",
+                    "Secret",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -166,20 +166,20 @@ public class RegisterFrame extends JFrame {
         String confirmPassword = new String(confirmPasswordField.getPassword());
 
         // Validate input
-        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || 
-            password.isEmpty() || confirmPassword.isEmpty()) {
+        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() ||
+                password.isEmpty() || confirmPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "Please fill in all fields",
-                "Registration Error",
-                JOptionPane.ERROR_MESSAGE); 
+                    "Please fill in all fields",
+                    "Registration Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this,
-                "Passwords do not match",
-                "Registration Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Passwords do not match",
+                    "Registration Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -189,21 +189,21 @@ public class RegisterFrame extends JFrame {
             userService.register(user);
             boolean isAdmin = Objects.equals(role, "manager");
             JOptionPane.showMessageDialog(this,
-                "Registration successful! Please login." + 
-                (isAdmin ? " (Admin privileges granted)" : ""),
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+                    "Registration successful! Please login." +
+                            (isAdmin ? " (Admin privileges granted)" : ""),
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
             handleCancel();
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Registration Error",
-                JOptionPane.ERROR_MESSAGE);
+                    ex.getMessage(),
+                    "Registration Error",
+                    JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this,
-                "Database error: " + ex.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Database error: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }

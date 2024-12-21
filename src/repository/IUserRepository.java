@@ -15,5 +15,6 @@ public interface IUserRepository {
     List<User> findAll() throws SQLException;
 
     List<User> findAllPassengers() throws SQLException;
+
     void delete(int id) throws SQLException;
 }

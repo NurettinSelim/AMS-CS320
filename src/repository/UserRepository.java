@@ -10,14 +10,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRepository implements IUserRepository{
+public class UserRepository implements IUserRepository {
 
     @Override
     public User create(User user) throws SQLException {
         String query = """
-        INSERT INTO users (email, password, role, name, surname)
-        VALUES (?, ?, ?, ?, ?)
-    """;
+                    INSERT INTO users (email, password, role, name, surname)
+                    VALUES (?, ?, ?, ?, ?)
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -72,10 +72,10 @@ public class UserRepository implements IUserRepository{
     @Override
     public void update(User user) throws SQLException {
         String query = """
-            UPDATE users 
-            SET email = ?, password = ?, role = ?
-            WHERE id = ?
-        """;
+                    UPDATE users 
+                    SET email = ?, password = ?, role = ?
+                    WHERE id = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

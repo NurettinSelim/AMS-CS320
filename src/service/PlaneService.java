@@ -7,8 +7,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class PlaneService implements IPlaneService{
+public class PlaneService implements IPlaneService {
     private final PlaneRepository planeRepository;
+
     public PlaneService() {
         this.planeRepository = new PlaneRepository();
     }
@@ -34,7 +35,7 @@ public class PlaneService implements IPlaneService{
 
     @Override
     public void updatePlane(Plane plane) throws SQLException {
-        if (plane.getCapacity()< 0) {
+        if (plane.getCapacity() < 0) {
             throw new IllegalArgumentException("Capacities cannot be negative");
         }
         planeRepository.update(plane);

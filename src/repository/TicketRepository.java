@@ -7,13 +7,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketRepository implements ITicketRepository{
+public class TicketRepository implements ITicketRepository {
     @Override
     public Ticket create(Ticket ticket) throws SQLException {
         String query = """
-            INSERT INTO tickets (flight_id, user_id, departure, destination, departure_time, seat_type, seat_number, price)
-            VALUES (?,?, ?, ?, ?, ?, ?, ?)
-        """;
+                    INSERT INTO tickets (flight_id, user_id, departure, destination, departure_time, seat_type, seat_number, price)
+                    VALUES (?,?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {

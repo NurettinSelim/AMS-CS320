@@ -6,7 +6,7 @@ import repository.UserRepository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
 
     public UserService() {
@@ -54,6 +54,7 @@ public class UserService implements IUserService{
     public List<User> getAllPassengers() throws SQLException {
         return userRepository.findAllPassengers();
     }
+
     @Override
     public void deleteUser(int userId) throws SQLException {
         userRepository.delete(userId);

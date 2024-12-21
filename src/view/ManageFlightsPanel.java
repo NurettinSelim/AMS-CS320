@@ -86,8 +86,8 @@ public class ManageFlightsPanel extends JPanel {
                         flight.getFlightNumber(),
                         flight.getDeparture(),
                         flight.getDestination(),
-                        flight.getDepartureTime().toString(),
-                        flight.getArrivalTime().toString(),
+                        flight.getDepartureTime().format(formatter),
+                        flight.getArrivalTime().format(formatter),
                         plane.getPlaneName(),
                         String.format("$%.2f", flight.getEconomyPrice()),
                         String.format("$%.2f", flight.getBusinessPrice()),
@@ -123,8 +123,8 @@ public class ManageFlightsPanel extends JPanel {
             JTextField flightNumberField = new JTextField();
             JTextField departureField = new JTextField();
             JTextField destinationField = new JTextField();
-            JTextField departureDateField = new HintTextField("YYYY-MM-DD HH:mm",15);
-            JTextField arrivalDateField = new HintTextField("YYYY-MM-DD HH:mm",15);
+            JTextField departureDateField = new HintTextField("YYYY-MM-DD HH:mm", 15);
+            JTextField arrivalDateField = new HintTextField("YYYY-MM-DD HH:mm", 15);
             JComboBox<String> planeComboBox = new JComboBox<>(
                     planes.stream()
                             .map(Plane::getPlaneName)
@@ -167,7 +167,6 @@ public class ManageFlightsPanel extends JPanel {
                     String flightNumber = flightNumberField.getText();
                     String departure = departureField.getText().trim();
                     String destination = destinationField.getText().trim();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                     LocalDateTime departureTime = LocalDateTime.parse(departureDateField.getText(), formatter);
                     LocalDateTime arrivalTime = LocalDateTime.parse(arrivalDateField.getText(), formatter);  // Append seconds if not included
                     String selectedPlaneName = (String) planeComboBox.getSelectedItem();

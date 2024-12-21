@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaneRepository implements IPlaneRepository{  //changed
+public class PlaneRepository implements IPlaneRepository {  //changed
     @Override
     public Plane create(Plane plane) throws SQLException {
         String query = """
-            INSERT INTO planes (plane_name, capacity)
-            VALUES (?, ?)
-        """;
+                    INSERT INTO planes (plane_name, capacity)
+                    VALUES (?, ?)
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -81,10 +81,10 @@ public class PlaneRepository implements IPlaneRepository{  //changed
     @Override
     public void update(Plane plane) throws SQLException {
         String query = """
-            UPDATE planes 
-            SET plane_name = ?, capacity = ?
-            WHERE id = ?
-        """;
+                    UPDATE planes 
+                    SET plane_name = ?, capacity = ?
+                    WHERE id = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -107,17 +107,18 @@ public class PlaneRepository implements IPlaneRepository{  //changed
             stmt.executeUpdate();
         }
     }
+
     public boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime)
             throws SQLException {
         String query = """
-        SELECT COUNT(*) as count FROM flights 
-        WHERE plane_id = ? 
-        AND (
-            (departure_time BETWEEN ? AND ?) OR
-            (arrival_time BETWEEN ? AND ?) OR
-            (departure_time <= ? AND arrival_time >= ?)
-        )
-    """;
+                    SELECT COUNT(*) as count FROM flights 
+                    WHERE plane_id = ? 
+                    AND (
+                        (departure_time BETWEEN ? AND ?) OR
+                        (arrival_time BETWEEN ? AND ?) OR
+                        (departure_time <= ? AND arrival_time >= ?)
+                    )
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

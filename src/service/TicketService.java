@@ -7,7 +7,7 @@ import repository.TicketRepository;
 import java.sql.SQLException;
 import java.util.List;
 
-public class TicketService implements ITicketService{
+public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
     private final FlightService flightService;
 

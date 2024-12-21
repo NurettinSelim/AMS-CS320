@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PassengerListPanel extends JPanel{
+public class PassengerListPanel extends JPanel {
     private final UserService userService;
     private final TicketService ticketService;
     private final FlightService flightService;
@@ -116,8 +116,8 @@ public class PassengerListPanel extends JPanel{
 
     private void refreshPassengers() {
         try {
-            List<User> passengers = userService.getAllUsers();
-            //updatePassengerTableModel(passengers);
+            List<User> users = userService.getAllUsers();
+            updateUserTableModel(users);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
                     "Error loading passengers: " + e.getMessage(),
@@ -150,7 +150,7 @@ public class PassengerListPanel extends JPanel{
     private void updateUserTableModel(List<User> users) {
         passengerTableModel.setRowCount(0);
         for (User user : users) {
-            if (user.getRole() != "ADMIN") { // Only show non-admin users
+            if (user.getRole().equals("passenger")) { // Only show non-admin users
                 passengerTableModel.addRow(new Object[]{
                         user.getId(),
                         user.getName(),

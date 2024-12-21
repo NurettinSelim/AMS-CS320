@@ -26,7 +26,7 @@ public class LoginFrame extends JFrame {
         userService = new UserService();
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(10,10));
+        mainPanel.setLayout(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel formPanel = new JPanel(new GridBagLayout());

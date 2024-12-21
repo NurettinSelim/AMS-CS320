@@ -34,6 +34,7 @@ public class Plane {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
     public boolean isEmpty() {
         return id <= 0 || planeName == null || planeName.isEmpty() || capacity <= 0;
     }
