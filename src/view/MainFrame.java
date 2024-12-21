@@ -4,13 +4,12 @@ import model.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class MainFrame extends JFrame {
     private final User currentUser;
     private final JPanel contentPanel;
     private final CardLayout cardLayout;
-    private ProfilePanel profilePanel;
+    private final ProfilePanel profilePanel;
 
     public MainFrame(User user) {
         this.currentUser = user;

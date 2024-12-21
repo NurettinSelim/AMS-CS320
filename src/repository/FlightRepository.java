@@ -142,7 +142,7 @@ public class FlightRepository implements IFlightRepository{
             while (rs.next()) {
                 if (rs.getTimestamp("departure_time").toLocalDateTime().equals(departureTime)) {
                     flights.add(createFlightFromResultSet(rs));
-                };
+                }
             }
         }
         return flights;

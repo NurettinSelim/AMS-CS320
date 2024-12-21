@@ -5,9 +5,7 @@ import model.Plane;
 import repository.FlightRepository;
 import repository.PlaneRepository;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 

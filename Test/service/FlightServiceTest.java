@@ -2,20 +2,19 @@ package service;
 
 import model.Flight;
 import model.Plane;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import repository.FlightRepository;
 import repository.PlaneRepository;
 import util.DatabaseConnection;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FlightServiceTest {
 
