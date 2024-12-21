@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -41,8 +40,8 @@ class FlightServiceTest {
         plane = planeRepository.create(plane);
 
         String flightNumber = "FL123";
-        Time departureTime = Time.valueOf(LocalTime.now().plusHours(1)); // Use Time for departure time
-        Time arrivalTime = Time.valueOf(departureTime.toLocalTime().plusHours(2)); // Use Time for arrival time
+        Time departureTime = Time.valueOf(LocalTime.now().plusHours(1));
+        Time arrivalTime = Time.valueOf(departureTime.toLocalTime().plusHours(2));
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 500;
@@ -116,29 +115,30 @@ class FlightServiceTest {
 
     @Test
     void searchFlights() throws SQLException {
+        Plane plane1 = new Plane(101, "Boeing 777", 300);
+        Plane plane2 = new Plane(102, "Airbus A380", 400);
+
+        planeRepository.create(plane1);
+        planeRepository.create(plane2);
+
         String departure = "New York";
         String destination = "London";
         Time departureTime = Time.valueOf("15:00:00");
 
-        Flight flight1 = new Flight(1, "AA100", departureTime, Time.valueOf("22:00:00"), departure, destination, 101, 500.0, 1000.0, 50, 20);
+        Flight flight1 = new Flight(1, "AA100", departureTime, Time.valueOf("22:00:00"), departure, destination, plane1.getId(), 500.0, 1000.0, 50, 20);
 
         Time flight2DepartureTime = new Time(departureTime.getTime() + 24 * 60 * 60 * 1000);
         Time flight2ArrivalTime = new Time(flight2DepartureTime.getTime() + 8 * 60 * 60 * 1000);
 
-        Flight flight2 = new Flight(2, "BB200", flight2DepartureTime, flight2ArrivalTime, departure, destination, 102, 600.0, 1100.0, 60, 25);
-
+        Flight flight2 = new Flight(2, "BB200", flight2DepartureTime, flight2ArrivalTime, departure, destination, plane2.getId(), 600.0, 1100.0, 60, 25);
 
         flightRepository.create(flight1);
         flightRepository.create(flight2);
 
         System.out.println("Flight 1 created: " + flight1.getFlightNumber());
-
-
         System.out.println("Flight 2 created: " + flight2.getFlightNumber());
 
         List<Flight> flights = flightService.searchFlights(departure, destination, departureTime);
-
-
 
         assertEquals(1, flights.size());
         assertEquals("AA100", flights.get(0).getFlightNumber());
@@ -189,7 +189,7 @@ class FlightServiceTest {
         Time departureTime = Time.valueOf("15:00:00");
         Time arrivalTime = Time.valueOf("22:00:00");
 
-        Flight flight = new Flight(0, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
+        Flight flight = new Flight(0, "AA100", departureTime, arrivalTime, "New York", "London", plane.getId(), 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
 
         flight.setFlightNumber("AA101");
@@ -229,7 +229,6 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats() throws SQLException {
-        // Use Time instead of LocalDateTime for departure and arrival times
         Time departureTime = Time.valueOf("15:00:00");
         Time arrivalTime = Time.valueOf("22:00:00");
 
@@ -264,7 +263,6 @@ class FlightServiceTest {
         assertThrows(IllegalArgumentException.class, () -> flightService.updateFlightSeats(flight.getId(), "ECONOMY", -60));
         assertThrows(IllegalArgumentException.class, () -> flightService.updateFlightSeats(flight.getId(), "BUSINESS", -25));
     }
-
 
     @Test
     void updateFlightSeats_invalidSeatType() {

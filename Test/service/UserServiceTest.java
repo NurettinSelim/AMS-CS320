@@ -121,10 +121,22 @@ public class UserServiceTest {
         userRepository.create(user2);
 
         List<User> users = userService.getAllUsers();
+        assertEquals(3, users.size()); //with initial admin
 
-        assertEquals(2, users.size());
-        assertTrue(users.contains(user1));
-        assertTrue(users.contains(user2));
+        boolean foundUser1 = false;
+        boolean foundUser2 = false;
+
+        for (User user : users) {
+            if (user.getId() == user1.getId() && user.getEmail().equals(user1.getEmail())) {
+                foundUser1 = true;
+            }
+            if (user.getId() == user2.getId() && user.getEmail().equals(user2.getEmail())) {
+                foundUser2 = true;
+            }
+        }
+
+        assertTrue(foundUser1);
+        assertTrue(foundUser2);
     }
 
     @Test

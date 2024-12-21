@@ -128,7 +128,7 @@ public class FlightRepository implements IFlightRepository{
             SELECT * FROM flights 
             WHERE departure = ? 
             AND destination = ? 
-            AND date(departure_time) = date(?)
+            AND time(departure_time) = ?
         """;
 
         List<Flight> flights = new ArrayList<>();
