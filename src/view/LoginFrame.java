@@ -19,7 +19,9 @@ public class LoginFrame extends JFrame {
     public LoginFrame() {
         this.setTitle("Airport Management System - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
         userService = new UserService();
 

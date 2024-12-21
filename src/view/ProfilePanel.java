@@ -77,8 +77,8 @@ public class ProfilePanel extends JPanel {
         JPanel ticketsPanel = new JPanel(new BorderLayout());
         ticketsPanel.setBorder(BorderFactory.createTitledBorder("My Tickets"));
 
-        String[] columns = {"Flight Number", "Departure", "Destination", 
-                          "Departure Time", "Seat Type", "Seat Number", "Price"};
+        String[] columns = {"Flight Number", "Departure", "Destination",
+                "Departure Time", "Seat Type", "Seat Number", "Price"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -90,7 +90,7 @@ public class ProfilePanel extends JPanel {
 
         JButton cancelTicketButton = new JButton("Cancel Selected Ticket");
         cancelTicketButton.addActionListener(e -> cancelSelectedTicket());
-        
+
         ticketsPanel.add(scrollPane, BorderLayout.CENTER);
         ticketsPanel.add(cancelTicketButton, BorderLayout.SOUTH);
 
@@ -111,9 +111,9 @@ public class ProfilePanel extends JPanel {
             updateTableModel(tickets);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
-                "Error loading tickets: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Error loading tickets: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -122,18 +122,18 @@ public class ProfilePanel extends JPanel {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             tableModel.addRow(new Object[]{
-                ticket.getId(),
-                ticket.getFlightId(),
-                ticket.getSeatType(),
-                ticket.getSeatNumber(),
-                String.format("$%.2f", ticket.getPrice())
+                    ticket.getId(),
+                    ticket.getFlightId(),
+                    ticket.getSeatType(),
+                    ticket.getSeatNumber(),
+                    String.format("$%.2f", ticket.getPrice())
             });
         }
     }
 
     private void showChangePasswordDialog() {
-        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), 
-            "Change Password", true);
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
+                "Change Password", true);
         dialog.setLayout(new BorderLayout(10, 10));
         dialog.setSize(300, 200);
         dialog.setLocationRelativeTo(this);
@@ -163,17 +163,17 @@ public class ProfilePanel extends JPanel {
 
             if (!currentPassword.equals(currentUser.getPassword())) {
                 JOptionPane.showMessageDialog(dialog,
-                    "Current password is incorrect",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        "Current password is incorrect",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (!newPassword.equals(confirmPassword)) {
                 JOptionPane.showMessageDialog(dialog,
-                    "New passwords do not match",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        "New passwords do not match",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -182,14 +182,14 @@ public class ProfilePanel extends JPanel {
                 userService.updateUser(currentUser);
                 dialog.dispose();
                 JOptionPane.showMessageDialog(this,
-                    "Password changed successfully",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Password changed successfully",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(dialog,
-                    "Error changing password: " + ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        "Error changing password: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
         });
@@ -223,14 +223,14 @@ public class ProfilePanel extends JPanel {
             currentUser.setEmail(newEmail);
             userService.updateUser(currentUser);
             JOptionPane.showMessageDialog(this,
-                "Profile updated successfully",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+                    "Profile updated successfully",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this,
-                "Error updating profile: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Error updating profile: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -239,32 +239,32 @@ public class ProfilePanel extends JPanel {
         int selectedRow = ticketTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
-                "Please select a ticket to cancel",
-                "Cancel Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Please select a ticket to cancel",
+                    "Cancel Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         int ticketId = (int) tableModel.getValueAt(selectedRow, 0);
 
         int choice = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to cancel this ticket?",
-            "Confirm Cancellation",
-            JOptionPane.YES_NO_OPTION);
+                "Are you sure you want to cancel this ticket?",
+                "Confirm Cancellation",
+                JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) {
             try {
                 ticketService.cancelTicket(ticketId);
                 refreshTickets();
                 JOptionPane.showMessageDialog(this,
-                    "Ticket cancelled successfully",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Ticket cancelled successfully",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this,
-                    "Error cancelling ticket: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        "Error cancelling ticket: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
