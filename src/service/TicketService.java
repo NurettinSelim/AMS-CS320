@@ -42,7 +42,7 @@ public class TicketService implements ITicketService{
 
         String seatNumber = generateSeatNumber(flightId, seatType);
 
-        Ticket ticket = new Ticket(0, flightId, userId, seatType, seatNumber, price);
+        Ticket ticket = new Ticket(0, flightId, userId, seatType, seatNumber, price, flight.getDeparture(), flight.getDestination(), flight.getDepartureTime());
         ticket = ticketRepository.create(ticket);
 
         flightService.updateFlightSeats(flightId, seatType, -1);

@@ -1,5 +1,8 @@
 package model;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 public class Ticket {
     private int id;
     private int flightId;
@@ -7,14 +10,20 @@ public class Ticket {
     private String seatType; // "ECONOMY" or "BUSINESS"
     private String seatNumber;
     private double price;
+    public String departure;
+    public String destination;
+    public LocalDateTime departureTime;
 
-    public Ticket(int id, int flightId, int userId, String seatType, String seatNumber, double price) {
+    public Ticket(int id, int flightId, int userId, String seatType, String seatNumber, double price, String departure, String destination, LocalDateTime departureTime) {
         this.id = id;
         this.flightId = flightId;
         this.userId = userId;
         this.seatType = seatType;
         this.seatNumber = seatNumber;
         this.price = price;
+        this.departure = departure;
+        this.destination = destination;
+        this.departureTime = departureTime;
     }
 
     // Getters and Setters
@@ -64,5 +73,17 @@ public class Ticket {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
     }
 }

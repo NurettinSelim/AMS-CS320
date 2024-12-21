@@ -1,17 +1,19 @@
 package service;
 
 import model.Flight;
+
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IFlightService {
-    Flight createFlight(String flightNumber, Time departureTime, Time arrivalTime,
+    Flight createFlight(String flightNumber, LocalDateTime departureTime, LocalDateTime arrivalTime,
                         String departure, String destination, int planeId, double economyPrice,
                         double businessPrice, int economyCapacity, int businessCapacity) throws SQLException;
 
-    List<Flight> searchFlights(String departure, String destination, Time departureTime) throws SQLException;
+    List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) throws SQLException;
 
     List<Flight> getAllFlights() throws SQLException;
 

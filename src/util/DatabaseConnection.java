@@ -63,6 +63,9 @@ public class DatabaseConnection {
                         CREATE TABLE IF NOT EXISTS tickets (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             flight_id INTEGER NOT NULL,
+                            departure STRING NOT NULL,
+                            destination STRING NOT NULL,
+                            departure_time DATETIME NOT NULL,
                             user_id INTEGER NOT NULL,
                             seat_type TEXT NOT NULL,
                             seat_number TEXT NOT NULL,

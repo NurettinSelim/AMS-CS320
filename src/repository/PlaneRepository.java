@@ -107,7 +107,7 @@ public class PlaneRepository implements IPlaneRepository{  //changed
             stmt.executeUpdate();
         }
     }
-    public boolean isPlaneAvailable(int planeId, Time departureTime, Time arrivalTime)
+    public boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime)
             throws SQLException {
         String query = """
         SELECT COUNT(*) as count FROM flights 
@@ -123,12 +123,12 @@ public class PlaneRepository implements IPlaneRepository{  //changed
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, planeId);
-            stmt.setTime(2, departureTime);
-            stmt.setTime(3, arrivalTime);
-            stmt.setTime(4, departureTime);
-            stmt.setTime(5, arrivalTime);
-            stmt.setTime(6, departureTime);
-            stmt.setTime(7, arrivalTime);
+            stmt.setTimestamp(2, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(3, Timestamp.valueOf(arrivalTime));
+            stmt.setTimestamp(4, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(5, Timestamp.valueOf(arrivalTime));
+            stmt.setTimestamp(6, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(7, Timestamp.valueOf(arrivalTime));
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

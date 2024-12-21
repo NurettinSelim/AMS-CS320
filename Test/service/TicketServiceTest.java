@@ -13,11 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +28,7 @@ class TicketServiceTest {
     private FlightService flightService;
     private PlaneService planeService;
     private UserService userService;
-
-
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
     @BeforeEach
@@ -48,8 +45,8 @@ class TicketServiceTest {
     void purchaseTicket_validDetails_createsTicket() throws SQLException {
 
         Plane plane = planeService.createPlane( "Boeing 747", 200);
-        Time departureTime = Time.valueOf("14:00:00");
-        Time arrivalTime = Time.valueOf("16:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 150, 50);
@@ -79,8 +76,8 @@ class TicketServiceTest {
     @Test
     void purchaseTicket_noAvailableSeats() throws SQLException {
         Plane plane = planeService.createPlane("Boeing 747", 200);
-        Time departureTime = Time.valueOf("14:00:00");
-        Time arrivalTime = Time.valueOf("16:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 0, 0);
@@ -129,8 +126,8 @@ class TicketServiceTest {
 
         // Create a flight with the created plane
         String flightNumber = "FL123";
-        Time departureTime = Time.valueOf("14:00:00");
-        Time arrivalTime = Time.valueOf("16:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 100.0;

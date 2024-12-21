@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 class PlaneServiceTest {
 
     private PlaneService planeService;
     private PlaneRepository planeRepository;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -122,8 +124,8 @@ class PlaneServiceTest {
     void isPlaneAvailable() throws SQLException {
         Plane plane = planeService.createPlane("Boeing 747", 200);
 
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = new Time(departureTime.getTime() + 2 * 60 * 60 * 1000);
+        LocalDateTime departureTime = LocalDateTime.parse("2020-12-12 00:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2020-12-12 02:00",  formatter);
 
         boolean isAvailable = planeService.isPlaneAvailable(plane.getId(), departureTime, arrivalTime);
         assertTrue(isAvailable);
@@ -143,8 +145,8 @@ class PlaneServiceTest {
 
             stmt.setInt(1, plane.getId());
             stmt.setString(2, "FL123");
-            stmt.setTime(3, departureTime);
-            stmt.setTime(4, arrivalTime);
+            stmt.setTimestamp(3, Timestamp.valueOf(departureTime));
+            stmt.setTimestamp(4, Timestamp.valueOf(arrivalTime));
 
             stmt.setString(5,  departure);
             stmt.setString(6, destination);

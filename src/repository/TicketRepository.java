@@ -3,10 +3,7 @@ package repository;
 import model.Ticket;
 import util.DatabaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +11,8 @@ public class TicketRepository implements ITicketRepository{
     @Override
     public Ticket create(Ticket ticket) throws SQLException {
         String query = """
-            INSERT INTO tickets (flight_id, user_id, seat_type, seat_number, price)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO tickets (flight_id, user_id, departure, destination, departure_time, seat_type, seat_number, price)
+            VALUES (?,?, ?, ?, ?, ?, ?, ?)
         """;
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -23,9 +20,12 @@ public class TicketRepository implements ITicketRepository{
 
             stmt.setInt(1, ticket.getFlightId());
             stmt.setInt(2, ticket.getUserId());
-            stmt.setString(3, ticket.getSeatType());
-            stmt.setString(4, ticket.getSeatNumber());
-            stmt.setDouble(5, ticket.getPrice());
+            stmt.setString(3, ticket.getDeparture());
+            stmt.setString(4, ticket.getDestination());
+            stmt.setTimestamp(5, Timestamp.valueOf(ticket.getDepartureTime()));
+            stmt.setString(6, ticket.getSeatType());
+            stmt.setString(7, ticket.getSeatNumber());
+            stmt.setDouble(8, ticket.getPrice());
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -130,7 +130,10 @@ public class TicketRepository implements ITicketRepository{
                 rs.getInt("user_id"),
                 rs.getString("seat_type"),
                 rs.getString("seat_number"),
-                rs.getDouble("price")
+                rs.getDouble("price"),
+                rs.getString("departure"),
+                rs.getString("destination"),
+                rs.getTimestamp("departure_time").toLocalDateTime()
         );
     }
 }

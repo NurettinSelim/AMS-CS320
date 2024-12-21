@@ -8,6 +8,7 @@ import service.TicketService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -101,7 +102,7 @@ public class FlightListPanel extends JPanel {
         }
 
         try {
-            Time currentTime = new Time(System.currentTimeMillis());
+            LocalDateTime currentTime = LocalDateTime.now();
             List<Flight> flights = flightService.searchFlights(departure, destination, currentTime);
             updateTableModel(flights);
         } catch (SQLException e) {

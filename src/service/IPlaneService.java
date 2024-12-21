@@ -1,6 +1,8 @@
 package service;
 
 import model.Plane;
+
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -17,6 +19,6 @@ public interface IPlaneService {
     
     void deletePlane(int id) throws SQLException;
     
-    boolean isPlaneAvailable(int planeId, Time departureTime, Time arrivalTime)
+    boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime)
             throws SQLException;
 } 

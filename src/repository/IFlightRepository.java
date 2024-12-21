@@ -2,6 +2,7 @@ package repository;
 
 import model.Flight;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -18,5 +19,5 @@ public interface IFlightRepository {
 
     void delete(int id) throws SQLException;
 
-    List<Flight> searchFlights(String departure, String destination, Time departureTime) throws SQLException;
+    List<Flight> searchFlights(String departure, String destination, LocalDateTime departureTime) throws SQLException;
 }

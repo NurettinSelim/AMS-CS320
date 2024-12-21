@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 class FlightServiceTest {
@@ -20,6 +22,7 @@ class FlightServiceTest {
     private FlightService flightService;
     private FlightRepository flightRepository;
     private PlaneRepository planeRepository;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -40,8 +43,8 @@ class FlightServiceTest {
         plane = planeRepository.create(plane);
 
         String flightNumber = "FL123";
-        Time departureTime = Time.valueOf(LocalTime.now().plusHours(1));
-        Time arrivalTime = Time.valueOf(departureTime.toLocalTime().plusHours(2));
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 500;
@@ -71,8 +74,8 @@ class FlightServiceTest {
             ResultSet rs = stmt.executeQuery();
             assertTrue(rs.next());
             assertEquals(flightNumber, rs.getString("flight_number"));
-            assertEquals(departureTime, rs.getTime("departure_time"));
-            assertEquals(arrivalTime, rs.getTime("arrival_time"));
+            assertEquals(departureTime.format(formatter) + ":00.0", rs.getTimestamp("departure_time").toString());
+            assertEquals(arrivalTime.format(formatter) + ":00.0", rs.getTimestamp("arrival_time").toString());
             assertEquals(departure, rs.getString("departure"));
             assertEquals(destination, rs.getString("destination"));
             assertEquals(plane.getId(), rs.getInt("plane_id"));
@@ -86,8 +89,8 @@ class FlightServiceTest {
     @Test
     void createFlightWithInvalidPlane() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Time departureTime = Time.valueOf("10:00:00");
-            Time arrivalTime = Time.valueOf("12:00:00");
+            LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+            LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
             flightService.createFlight("FL123", departureTime, arrivalTime,
                     "New York", "Los Angeles", 999, 500, 1200, 150, 50);
@@ -100,8 +103,8 @@ class FlightServiceTest {
         Plane plane = new Plane(0, "Boeing 747", 200);
         plane = planeRepository.create(plane); // Create the plane
 
-        Time departureTime = Time.valueOf("10:00:00");
-        Time arrivalTime = Time.valueOf("12:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         flightService.createFlight("FL123", departureTime, arrivalTime,
                 "New York", "Los Angeles", plane.getId(), 500, 1200, 150, 50);
@@ -123,12 +126,13 @@ class FlightServiceTest {
 
         String departure = "New York";
         String destination = "London";
-        Time departureTime = Time.valueOf("15:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
 
-        Flight flight1 = new Flight(1, "AA100", departureTime, Time.valueOf("22:00:00"), departure, destination, plane1.getId(), 500.0, 1000.0, 50, 20);
 
-        Time flight2DepartureTime = new Time(departureTime.getTime() + 24 * 60 * 60 * 1000);
-        Time flight2ArrivalTime = new Time(flight2DepartureTime.getTime() + 8 * 60 * 60 * 1000);
+        Flight flight1 = new Flight(1, "AA100", departureTime,  LocalDateTime.parse("2024-12-10 14:00",  formatter), departure, destination, plane1.getId(), 500.0, 1000.0, 50, 20);
+
+        LocalDateTime flight2DepartureTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
+        LocalDateTime flight2ArrivalTime = LocalDateTime.parse("2024-12-10 17:00",  formatter);
 
         Flight flight2 = new Flight(2, "BB200", flight2DepartureTime, flight2ArrivalTime, departure, destination, plane2.getId(), 600.0, 1100.0, 60, 25);
 
@@ -146,11 +150,11 @@ class FlightServiceTest {
 
     @Test
     void getAllFlights() throws SQLException {
-        Time departureTime1 = Time.valueOf("15:00:00");
-        Time arrivalTime1 = Time.valueOf("22:00:00");
+        LocalDateTime departureTime1 = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime1 = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
-        Time departureTime2 = Time.valueOf("10:00:00");
-        Time arrivalTime2 = Time.valueOf("17:00:00");
+        LocalDateTime departureTime2 = LocalDateTime.parse("2024-12-10 09:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime2 = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for arrival time
 
         Flight flight1 = new Flight(1, "AA100", departureTime1, arrivalTime1, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         Flight flight2 = new Flight(2, "BB200", departureTime2, arrivalTime2, "New York", "Paris", 102, 600.0, 1100.0, 60, 25);
@@ -168,8 +172,8 @@ class FlightServiceTest {
 
     @Test
     void getFlightById() throws SQLException {
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = Time.valueOf("22:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -186,8 +190,8 @@ class FlightServiceTest {
         Plane plane = new Plane(0, "Boeing 777", 300);
         planeRepository.create(plane);
 
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = Time.valueOf("22:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = new Flight(0, "AA100", departureTime, arrivalTime, "New York", "London", plane.getId(), 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -214,8 +218,8 @@ class FlightServiceTest {
 
     @Test
     void deleteFlight() throws SQLException {
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = Time.valueOf("22:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -229,8 +233,8 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats() throws SQLException {
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = Time.valueOf("22:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -254,8 +258,8 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats_notEnoughSeats() throws SQLException {
-        Time departureTime = Time.valueOf("15:00:00");
-        Time arrivalTime = Time.valueOf("22:00:00");
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);

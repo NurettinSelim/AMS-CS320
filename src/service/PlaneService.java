@@ -3,6 +3,7 @@ package service;
 import model.Plane;
 import repository.PlaneRepository;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -47,7 +48,7 @@ public class PlaneService implements IPlaneService{
     }
 
     @Override
-    public boolean isPlaneAvailable(int planeId, Time departureTime, Time arrivalTime) throws SQLException {
+    public boolean isPlaneAvailable(int planeId, LocalDateTime departureTime, LocalDateTime arrivalTime) throws SQLException {
         return planeRepository.isPlaneAvailable(planeId, departureTime, arrivalTime);
     }
 }

@@ -8,8 +8,11 @@ import service.PlaneService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -168,8 +171,9 @@ public class ManageFlightsPanel extends JPanel {
                     String flightNumber = flightNumberField.getText();
                     String departure = departureField.getText().trim();
                     String destination = destinationField.getText().trim();
-                    Time departureTime = Time.valueOf(departureDateField.getText().trim() + ":00");  // Append seconds if not included
-                    Time arrivalTime = Time.valueOf(arrivalDateField.getText().trim() + ":00");  // Append seconds if not included
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    LocalDateTime departureTime = LocalDateTime.parse(departureDateField.getText(), formatter);
+                    LocalDateTime arrivalTime = LocalDateTime.parse(arrivalDateField.getText(), formatter);  // Append seconds if not included
                     String selectedPlaneName = (String) planeComboBox.getSelectedItem();
                     double economyPrice = (double) economyPriceSpinner.getValue();
                     double businessPrice = (double) businessPriceSpinner.getValue();
@@ -180,7 +184,7 @@ public class ManageFlightsPanel extends JPanel {
                         throw new IllegalArgumentException("Please fill in all fields");
                     }
 
-                    if (departureTime.after(arrivalTime)) {
+                    if (departureTime.isAfter(arrivalTime)) {
                         throw new IllegalArgumentException("Departure time must be before arrival time");
                     }
 
@@ -189,7 +193,7 @@ public class ManageFlightsPanel extends JPanel {
                             .findFirst()
                             .orElseThrow(() -> new IllegalStateException("Plane not found"));
 
-                    flightService.createFlight(String.valueOf(flightNumber), departureTime, arrivalTime,
+                    flightService.createFlight(flightNumber, departureTime, arrivalTime,
                             departure, destination, selectedPlane.getId(),
                             economyPrice, businessPrice, economyCapacity, businessCapacity);
 
@@ -272,8 +276,8 @@ public class ManageFlightsPanel extends JPanel {
             JTextField flightNumberField = new JTextField(flight.getFlightNumber());
             JTextField departureField = new JTextField(flight.getDeparture());
             JTextField destinationField = new JTextField(flight.getDestination());
-            JTextField departureDateField = new JTextField(flight.getDepartureTime().toString());
-            JTextField arrivalDateField = new JTextField(flight.getArrivalTime().toString());
+            JTextField departureDateField = new JTextField(flight.getDepartureTime().format(formatter));
+            JTextField arrivalDateField = new JTextField(flight.getArrivalTime().format(formatter));
             JComboBox<String> planeComboBox = new JComboBox<>(
                     planes.stream()
                             .map(Plane::getPlaneName)
@@ -315,8 +319,8 @@ public class ManageFlightsPanel extends JPanel {
                     String newDestination = destinationField.getText().trim();
                     String departureText = departureDateField.getText();
                     String arrivalText = arrivalDateField.getText();
-                    Time newDepartureTime = Time.valueOf(departureText + ":00");
-                    Time newArrivalTime = Time.valueOf(arrivalText + ":00");
+                    LocalDateTime newDepartureTime = LocalDateTime.parse(departureDateField.getText(), formatter);
+                    LocalDateTime newArrivalTime = LocalDateTime.parse(arrivalDateField.getText(), formatter);
                     String selectedPlaneName = (String) planeComboBox.getSelectedItem();
                     double newEconomyPrice = (double) economyPriceSpinner.getValue();
                     double newBusinessPrice = (double) businessPriceSpinner.getValue();
@@ -326,7 +330,7 @@ public class ManageFlightsPanel extends JPanel {
                         throw new IllegalArgumentException("Please fill in all fields");
                     }
 
-                    if (newDepartureTime.after(newArrivalTime)) {
+                    if (newDepartureTime.isAfter(newArrivalTime)) {
                         throw new IllegalArgumentException("Departure time must be before arrival time");
                     }
 
