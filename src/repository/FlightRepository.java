@@ -128,7 +128,6 @@ public class FlightRepository implements IFlightRepository{
             SELECT * FROM flights 
             WHERE departure = ? 
             AND destination = ? 
-            AND departure_time = ?
         """;
 
         List<Flight> flights = new ArrayList<>();
@@ -137,12 +136,13 @@ public class FlightRepository implements IFlightRepository{
 
             stmt.setString(1, departure);
             stmt.setString(2, destination);
-            stmt.setTimestamp(3, Timestamp.valueOf(departureTime));
 
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                flights.add(createFlightFromResultSet(rs));
+                if (rs.getTimestamp("departure_time").toLocalDateTime().equals(departureTime)) {
+                    flights.add(createFlightFromResultSet(rs));
+                };
             }
         }
         return flights;
