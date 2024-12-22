@@ -34,6 +34,11 @@ public class FlightService implements IFlightService {
             throw new IllegalArgumentException("Plane is not available for the specified time slot");
         }
 
+        int totalTickets = economyCapacity + businessCapacity;
+        if (plane.getCapacity() < totalTickets) {
+            throw new IllegalArgumentException("Total tickets allocated exceeds plane capacity.");
+        }
+
         Flight flight = new Flight(0, flightNumber, departureTime, arrivalTime, departure, destination,
                 planeId, economyPrice, businessPrice, economyCapacity, businessCapacity);
 
