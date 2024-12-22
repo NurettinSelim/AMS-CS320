@@ -17,7 +17,6 @@ public class User {
         this.surname = surname;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }

@@ -42,8 +42,8 @@ class FlightServiceTest {
         plane = planeRepository.create(plane);
 
         String flightNumber = "FL123";
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 500;
@@ -102,8 +102,8 @@ class FlightServiceTest {
         Plane plane = new Plane(0, "Boeing 747", 200);
         plane = planeRepository.create(plane); // Create the plane
 
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         flightService.createFlight("FL123", departureTime, arrivalTime,
                 "New York", "Los Angeles", plane.getId(), 500, 1200, 150, 50);
@@ -149,11 +149,11 @@ class FlightServiceTest {
 
     @Test
     void getAllFlights() throws SQLException {
-        LocalDateTime departureTime1 = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime1 = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime1 = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime1 = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
-        LocalDateTime departureTime2 = LocalDateTime.parse("2024-12-10 09:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime2 = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime2 = LocalDateTime.parse("2024-12-10 09:00",  formatter);
+        LocalDateTime arrivalTime2 = LocalDateTime.parse("2024-12-10 12:00",  formatter);
 
         Flight flight1 = new Flight(1, "AA100", departureTime1, arrivalTime1, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         Flight flight2 = new Flight(2, "BB200", departureTime2, arrivalTime2, "New York", "Paris", 102, 600.0, 1100.0, 60, 25);
@@ -171,8 +171,8 @@ class FlightServiceTest {
 
     @Test
     void getFlightById() throws SQLException {
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -189,8 +189,8 @@ class FlightServiceTest {
         Plane plane = new Plane(0, "Boeing 777", 300);
         planeRepository.create(plane);
 
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = new Flight(0, "AA100", departureTime, arrivalTime, "New York", "London", plane.getId(), 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -217,8 +217,8 @@ class FlightServiceTest {
 
     @Test
     void deleteFlight() throws SQLException {
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -232,8 +232,8 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats() throws SQLException {
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);
@@ -257,8 +257,8 @@ class FlightServiceTest {
 
     @Test
     void updateFlightSeats_notEnoughSeats() throws SQLException {
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = new Flight(1, "AA100", departureTime, arrivalTime, "New York", "London", 101, 500.0, 1000.0, 50, 20);
         flightRepository.create(flight);

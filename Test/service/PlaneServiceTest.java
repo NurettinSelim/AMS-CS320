@@ -22,7 +22,6 @@ class PlaneServiceTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-
         planeRepository = new PlaneRepository();
         planeService = new PlaneService();
 

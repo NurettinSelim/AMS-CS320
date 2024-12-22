@@ -120,7 +120,7 @@ public class UserServiceTest {
         userRepository.create(user2);
 
         List<User> users = userService.getAllUsers();
-        assertEquals(3, users.size()); //with initial admin
+        assertEquals(3, users.size());
 
         boolean foundUser1 = false;
         boolean foundUser2 = false;

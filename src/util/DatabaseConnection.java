@@ -10,7 +10,6 @@ public class DatabaseConnection {
 
     public static Connection getConnection() throws SQLException {
         try {
-            // load sqlite driver
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(URL);
             createTablesIfNotExist();
@@ -80,7 +79,6 @@ public class DatabaseConnection {
                 statement.execute(query);
             }
 
-            // Insert admin user if not exists
             statement.execute("""
                         INSERT OR IGNORE INTO users (email, password, role, name, surname)
                         VALUES ('admin@ams.com', 'admin', 'manager','admin','admin')

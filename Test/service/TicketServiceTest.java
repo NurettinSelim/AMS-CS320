@@ -45,10 +45,9 @@ class TicketServiceTest {
 
     @Test
     void purchaseTicket_validDetails_createsTicket() throws SQLException {
-
         Plane plane = planeService.createPlane( "Boeing 747", 200);
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 150, 50);
@@ -78,8 +77,8 @@ class TicketServiceTest {
     @Test
     void purchaseTicket_noAvailableSeats() throws SQLException {
         Plane plane = planeService.createPlane("Boeing 747", 200);
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 0, 0);
@@ -93,8 +92,8 @@ class TicketServiceTest {
     @Test
     void getTicketsByUser() throws SQLException {
         Plane plane = planeService.createPlane("Boeing 747", 200);
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 10, 50);
@@ -111,8 +110,8 @@ class TicketServiceTest {
     @Test
     void getTicketsByFlight() throws SQLException {
         Plane plane = planeService.createPlane("Boeing 747", 200);
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 10, 10);
@@ -127,11 +126,9 @@ class TicketServiceTest {
 
     @Test
     void getAllTickets() throws SQLException {
-
-
         Plane plane = planeService.createPlane( "Boeing 747", 200);
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
 
         flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
                 100.0, 200.0, 150, 50);
@@ -147,14 +144,12 @@ class TicketServiceTest {
 
     @Test
     void cancelTicket() throws SQLException {
-        // Create a plane for the flight
-        Plane plane = new Plane(0, "Boeing 747", 200); // Plane ID will be auto-generated
+        Plane plane = new Plane(0, "Boeing 747", 200);
         Plane createdPlane = planeService.createPlane(plane.getPlaneName(), plane.getCapacity());
 
-        // Create a flight with the created plane
         String flightNumber = "FL123";
-        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
-        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter);
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter);
         String departure = "New York";
         String destination = "Los Angeles";
         double economyPrice = 100.0;
@@ -167,16 +162,12 @@ class TicketServiceTest {
                 economyPrice, businessPrice, economySeatsAvailable, businessSeatsAvailable
         );
 
-        // Create a user
         User createdUser = userService.register(0, "email3@example.com", "password123", "passenger", "John", "Doe");
 
-        // Purchase a ticket for the created flight and user
         Ticket ticket = ticketService.purchaseTicket(createdFlight.getId(), createdUser.getId(), "ECONOMY");
 
-        // Get the ticket ID for cancellation
         int ticketId = ticket.getId();
 
-        // Get the original seat count for the flight
         Flight flight = flightService.getFlightById(createdFlight.getId());
         int originalSeatCount = flight.getEconomySeatsAvailable();
 
@@ -184,13 +175,9 @@ class TicketServiceTest {
         ticketService.cancelTicket(ticketId);
         System.out.println("Ticket count after cancellation: " + ticketService.getAllTickets());
 
-
-
-        // Verify the ticket is cancelled
         Ticket cancelledTicket = ticketRepository.findById(ticketId);
-        assertNull(cancelledTicket); // Ticket should be removed
+        assertNull(cancelledTicket);
 
-        // Verify the seat count has increased by 1
         flight = flightService.getFlightById(createdFlight.getId());
         int updatedSeatCount = flight.getEconomySeatsAvailable();
         assertEquals(originalSeatCount+1 , updatedSeatCount);

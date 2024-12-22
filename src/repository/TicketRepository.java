@@ -109,7 +109,7 @@ public class TicketRepository implements ITicketRepository {
                 return createTicketFromResultSet(rs);
             }
         }
-        return null; // Return null if not found
+        return null;
     }
 
     @Override

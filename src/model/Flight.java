@@ -32,7 +32,6 @@ public class Flight {
         this.businessSeatsAvailable = businessSeatsAvailable;
     }
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
