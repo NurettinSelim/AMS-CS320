@@ -92,8 +92,15 @@ class TicketServiceTest {
 
     @Test
     void getTicketsByUser() throws SQLException {
+        Plane plane = planeService.createPlane("Boeing 747", 200);
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+
+        Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
+                100.0, 200.0, 10, 50);
         int userId = 1;
 
+        ticketService.purchaseTicket(flight.getId(),userId,"ECONOMY");
         List<Ticket> tickets = ticketService.getTicketsByUser(userId);
 
         assertNotNull(tickets);
@@ -103,19 +110,37 @@ class TicketServiceTest {
 
     @Test
     void getTicketsByFlight() throws SQLException {
-        int flightId = 101;
+        Plane plane = planeService.createPlane("Boeing 747", 200);
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
 
-        List<Ticket> tickets = ticketService.getTicketsByFlight(flightId);
+        Flight flight = flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
+                100.0, 200.0, 10, 10);
+
+        ticketService.purchaseTicket(flight.getId(), 1, "ECONOMY");
+        List<Ticket> tickets = ticketService.getTicketsByFlight(flight.getId());
 
         assertNotNull(tickets);
         assertFalse(tickets.isEmpty());
-        assertEquals(flightId, tickets.get(0).getFlightId());
+        assertEquals(flight.getId(), tickets.get(0).getFlightId());
     }
 
     @Test
     void getAllTickets() throws SQLException {
-        List<Ticket> tickets = ticketService.getAllTickets();
 
+
+        Plane plane = planeService.createPlane( "Boeing 747", 200);
+        LocalDateTime departureTime = LocalDateTime.parse("2024-12-10 12:00",  formatter); // Use Time for departure time
+        LocalDateTime arrivalTime = LocalDateTime.parse("2024-12-10 14:00",  formatter); // Use Time for arrival time
+
+        flightService.createFlight("FL123", departureTime, arrivalTime, "New York", "Los Angeles", plane.getId(),
+                100.0, 200.0, 150, 50);
+
+        Flight flight = flightRepository.findAll().get(0);
+
+        ticketService.purchaseTicket(flight.getId(), 1, "ECONOMY");
+
+        List<Ticket> tickets = ticketService.getAllTickets();
         assertNotNull(tickets);
         assertFalse(tickets.isEmpty());
     }
