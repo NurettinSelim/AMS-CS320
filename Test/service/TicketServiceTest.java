@@ -191,8 +191,9 @@ class TicketServiceTest {
         assertNull(cancelledTicket); // Ticket should be removed
 
         // Verify the seat count has increased by 1
+        flight = flightService.getFlightById(createdFlight.getId());
         int updatedSeatCount = flight.getEconomySeatsAvailable();
-        assertEquals(originalSeatCount , updatedSeatCount+1);
+        assertEquals(originalSeatCount+1 , updatedSeatCount);
     }
 
     @Test
