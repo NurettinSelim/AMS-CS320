@@ -80,6 +80,9 @@ public class MainFrame extends JFrame {
             if ("flights".equals(cardName)) {
                 flightListPanel.refreshFlights();
             }
+            if ("profile".equals(cardName)) {
+                profilePanel.refreshTickets();
+            }
             cardLayout.show(contentPanel, cardName);
         });
         panel.add(button);
