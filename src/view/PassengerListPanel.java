@@ -217,7 +217,7 @@ public class PassengerListPanel extends JPanel {
             return;
         }
 
-        int ticketId = (int) ticketTableModel.getValueAt(selectedRow, 7);
+        int ticketId = (int) ticketTableModel.getValueAt(selectedRow, 0);
         String flightNumber = (String) ticketTableModel.getValueAt(selectedRow, 1);
 
         int choice = JOptionPane.showConfirmDialog(this,
