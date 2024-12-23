@@ -15,8 +15,6 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             try {
                 // Create and show the login frame
-//                Passenger ipek = new Passenger(1,"ipek", "ipek123","ipek","debreli");
-//                Manager nehir = new Manager(2,"nehir.kirmizisakal@ams.com", "nehir123");
                 LoginFrame loginFrame = new LoginFrame();
                 loginFrame.setVisible(true);
             } catch (Exception e) {
