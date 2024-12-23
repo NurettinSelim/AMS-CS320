@@ -9,7 +9,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ManagePlanesPanel extends JPanel {
+public class ManagePlanesPanel extends JPanel implements IManagePlanesPanel {
     private final PlaneService planeService;
     private final JTable planeTable;
     private final DefaultTableModel tableModel;
@@ -54,7 +54,8 @@ public class ManagePlanesPanel extends JPanel {
         refreshPlanes();
     }
 
-    private void refreshPlanes() {
+    @Override
+    public void refreshPlanes() {
         try {
             List<Plane> planes = planeService.getAllPlanes();
             updateTableModel(planes);
@@ -67,7 +68,8 @@ public class ManagePlanesPanel extends JPanel {
         }
     }
 
-    private void updateTableModel(List<Plane> planes) {
+    @Override
+    public void updateTableModel(List<Plane> planes) {
         tableModel.setRowCount(0);
         for (Plane plane : planes) {
             tableModel.addRow(new Object[]{
@@ -78,7 +80,8 @@ public class ManagePlanesPanel extends JPanel {
         }
     }
 
-    private void showAddPlaneDialog() {
+    @Override
+    public void showAddPlaneDialog() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Add New Plane", true);
         dialog.setLayout(new BorderLayout(10, 10));
         dialog.setSize(300, 200);
@@ -135,7 +138,8 @@ public class ManagePlanesPanel extends JPanel {
         dialog.setVisible(true);
     }
 
-    private void editSelectedPlane() {
+    @Override
+    public void editSelectedPlane() {
         int selectedRow = planeTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -214,7 +218,8 @@ public class ManagePlanesPanel extends JPanel {
         dialog.setVisible(true);
     }
 
-    private void deleteSelectedPlane() {
+    @Override
+    public void deleteSelectedPlane() {
         int selectedRow = planeTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -258,7 +263,8 @@ public class ManagePlanesPanel extends JPanel {
         }
     }
 
-    private void loadPlanes() {
+    @Override
+    public void loadPlanes() {
         try {
             List<Plane> planes = planeService.getAllPlanes();
             updateTableModel(planes);

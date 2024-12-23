@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class LoginFrame extends JFrame {
+public class LoginFrame extends JFrame implements ILoginFrame {
     public final JTextField emailField;
     public final JPasswordField passwordField;
     public final JButton loginButton;
@@ -64,7 +64,8 @@ public class LoginFrame extends JFrame {
         add(mainPanel);
     }
 
-    private void handleLogin(ActionEvent e) {
+    @Override
+    public void handleLogin(ActionEvent e) {
         String email = emailField.getText();
         String password = new String(passwordField.getPassword());
 
@@ -97,13 +98,15 @@ public class LoginFrame extends JFrame {
         }
     }
 
-    private void handleRegister(ActionEvent e) {
+    @Override
+    public void handleRegister(ActionEvent e) {
         RegisterFrame registerFrame = new RegisterFrame(this);
         registerFrame.setVisible(true);
         setVisible(false);
     }
 
-    private void openMainFrame(User user) {
+    @Override
+    public void openMainFrame(User user) {
         SwingUtilities.invokeLater(() -> {
             MainFrame mainFrame = new MainFrame(user);
             mainFrame.setVisible(true);

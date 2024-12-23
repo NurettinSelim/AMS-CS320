@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class ProfilePanel extends JPanel {
+public class ProfilePanel extends JPanel implements IProfilePanel {
     private final User currentUser;
     private final UserService userService;
     private final TicketService ticketService;
@@ -106,6 +106,7 @@ public class ProfilePanel extends JPanel {
         refreshTickets();
     }
 
+    @Override
     public void refreshTickets() {
         try {
             List<Ticket> tickets = ticketService.getTicketsByUser(currentUser.getId());
@@ -119,7 +120,8 @@ public class ProfilePanel extends JPanel {
         }
     }
 
-    private void updateTableModel(List<Ticket> tickets) {
+    @Override
+    public void updateTableModel(List<Ticket> tickets) {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -136,7 +138,8 @@ public class ProfilePanel extends JPanel {
         }
     }
 
-    private void showChangePasswordDialog() {
+    @Override
+    public void showChangePasswordDialog() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this),
                 "Change Password", true);
         dialog.setLayout(new BorderLayout(10, 10));
@@ -209,7 +212,8 @@ public class ProfilePanel extends JPanel {
         dialog.setVisible(true);
     }
 
-    private void saveChanges() {
+    @Override
+    public void saveChanges() {
         String newEmail = emailField.getText().trim();
         try {
             currentUser.setEmail(newEmail);
@@ -227,7 +231,8 @@ public class ProfilePanel extends JPanel {
         }
     }
 
-    private void cancelSelectedTicket() {
+    @Override
+    public void cancelSelectedTicket() {
         int selectedRow = ticketTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -261,4 +266,4 @@ public class ProfilePanel extends JPanel {
             }
         }
     }
-} 
+}
