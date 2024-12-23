@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.Objects;
 
-public class RegisterFrame extends JFrame {
+public class RegisterFrame extends JFrame implements IRegisterFrame {
     private final JTextField nameField;
     private final JTextField surnameField;
     private final JTextField emailField;
@@ -146,7 +146,8 @@ public class RegisterFrame extends JFrame {
         add(mainPanel);
     }
 
-    private void toggleAdminMode() {
+    @Override
+    public void toggleAdminMode() {
         boolean isAdmin = !(Objects.equals(role, "manager"));
         role = "manager";
         secretLabel.setVisible(isAdmin);
@@ -158,7 +159,8 @@ public class RegisterFrame extends JFrame {
         }
     }
 
-    private void handleRegister(ActionEvent e) {
+    @Override
+    public void handleRegister(ActionEvent e) {
         String name = nameField.getText().trim();
         String surname = surnameField.getText().trim();
         String email = emailField.getText().trim();
@@ -208,7 +210,8 @@ public class RegisterFrame extends JFrame {
         }
     }
 
-    private void handleCancel() {
+    @Override
+    public void handleCancel() {
         loginFrame.setVisible(true);
         dispose();
     }

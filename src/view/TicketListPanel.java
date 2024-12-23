@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class TicketListPanel extends JPanel {
+public class TicketListPanel extends JPanel implements ITicketListPanel {
     private final TicketService ticketService;
     private final FlightService flightService;
     private final UserService userService;
@@ -71,7 +71,8 @@ public class TicketListPanel extends JPanel {
         refreshTickets();
     }
 
-    private void refreshTickets() {
+    @Override
+    public void refreshTickets() {
         try {
             List<Flight> flights = flightService.getAllFlights();
             List<User> passengers = userService.getAllPassengers();
@@ -86,7 +87,8 @@ public class TicketListPanel extends JPanel {
         }
     }
 
-    private void searchTickets() {
+    @Override
+    public void searchTickets() {
         String searchTerm = searchField.getText().trim().toLowerCase();
 
         try {
@@ -133,7 +135,8 @@ public class TicketListPanel extends JPanel {
         }
     }
 
-    private void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<User> users) {
+    @Override
+    public void updateTableModel(List<Ticket> tickets, List<Flight> flights, List<User> users) {
         tableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             Flight flight = flights.stream()
@@ -161,7 +164,8 @@ public class TicketListPanel extends JPanel {
         }
     }
 
-    private void cancelSelectedTicket() {
+    @Override
+    public void cancelSelectedTicket() {
         int selectedRow = ticketTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,

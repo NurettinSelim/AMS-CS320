@@ -5,7 +5,7 @@ import model.User;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements IMainFrame {
     private final User currentUser;
     private final JPanel contentPanel;
     private final CardLayout cardLayout;
@@ -44,7 +44,8 @@ public class MainFrame extends JFrame {
     }
 
 
-    private JPanel createSidebarPanel() {
+    @Override
+    public JPanel createSidebarPanel() {
         JPanel sidebarPanel = new JPanel();
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
         sidebarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -72,7 +73,8 @@ public class MainFrame extends JFrame {
         return sidebarPanel;
     }
 
-    private void addNavigationButton(JPanel panel, String text, String cardName) {
+    @Override
+    public void addNavigationButton(JPanel panel, String text, String cardName) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height));
@@ -89,7 +91,8 @@ public class MainFrame extends JFrame {
         panel.add(Box.createVerticalStrut(5));
     }
 
-    private void handleLogout() {
+    @Override
+    public void handleLogout() {
         int choice = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to logout?",
                 "Logout",

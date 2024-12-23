@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PassengerListPanel extends JPanel {
+public class PassengerListPanel extends JPanel implements IPassengerListPanel {
     private final UserService userService;
     private final TicketService ticketService;
     private final FlightService flightService;
@@ -114,7 +114,8 @@ public class PassengerListPanel extends JPanel {
         refreshPassengers();
     }
 
-    private void refreshPassengers() {
+    @Override
+    public void refreshPassengers() {
         try {
             List<User> users = userService.getAllUsers();
             updateUserTableModel(users);
@@ -127,7 +128,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void searchPassengers() {
+    @Override
+    public void searchPassengers() {
         String searchTerm = searchField.getText().trim().toLowerCase();
         try {
             List<User> allPassengers = userService.getAllPassengers();
@@ -147,7 +149,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void updateUserTableModel(List<User> users) {
+    @Override
+    public void updateUserTableModel(List<User> users) {
         passengerTableModel.setRowCount(0);
         for (User user : users) {
             if (user.getRole().equals("passenger")) { // Only show non-admin users
@@ -162,7 +165,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void loadSelectedPassengerTickets() {
+    @Override
+    public void loadSelectedPassengerTickets() {
         int selectedRow = passengerTable.getSelectedRow();
         if (selectedRow == -1) {
             ticketTableModel.setRowCount(0);
@@ -184,7 +188,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void updateTicketTableModel(List<Ticket> tickets, List<Flight> flights) {
+    @Override
+    public void updateTicketTableModel(List<Ticket> tickets, List<Flight> flights) {
         ticketTableModel.setRowCount(0);
         for (Ticket ticket : tickets) {
             Flight flight = flights.stream()
@@ -207,7 +212,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void cancelSelectedTicket() {
+    @Override
+    public void cancelSelectedTicket() {
         int selectedRow = ticketTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -243,7 +249,8 @@ public class PassengerListPanel extends JPanel {
         }
     }
 
-    private void deleteSelectedPassenger() {
+    @Override
+    public void deleteSelectedPassenger() {
         int selectedRow = passengerTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,

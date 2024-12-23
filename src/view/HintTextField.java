@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class HintTextField extends JTextField {
+public class HintTextField extends JTextField implements IHintTextField {
     private final String hint;
     private boolean showingHint;
 

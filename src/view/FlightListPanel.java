@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class FlightListPanel extends JPanel {
+public class FlightListPanel extends JPanel implements IFlightListPanel {
     private final User currentUser;
     private final FlightService flightService;
     private final TicketService ticketService;
@@ -78,7 +78,8 @@ public class FlightListPanel extends JPanel {
         refreshFlights();
     }
 
-    void refreshFlights() {
+    @Override
+    public void refreshFlights() {
         try {
             List<Flight> flights = flightService.getAllFlights();
             updateTableModel(flights);
@@ -91,7 +92,8 @@ public class FlightListPanel extends JPanel {
         }
     }
 
-    private void searchFlights() {
+    @Override
+    public void searchFlights() {
         String departure = departureField.getText().trim();
         String destination = destinationField.getText().trim();
 
@@ -116,7 +118,8 @@ public class FlightListPanel extends JPanel {
         }
     }
 
-    private void updateTableModel(List<Flight> flights) {
+    @Override
+    public void updateTableModel(List<Flight> flights) {
         tableModel.setRowCount(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -135,7 +138,8 @@ public class FlightListPanel extends JPanel {
         }
     }
 
-    private void bookSelectedFlight() {
+    @Override
+    public void bookSelectedFlight() {
         int selectedRow = flightTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,

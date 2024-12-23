@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class ManageFlightsPanel extends JPanel {
+public class ManageFlightsPanel extends JPanel implements IManageFlightsPanel {
     private final FlightService flightService;
     private final PlaneService planeService;
     private final JTable flightTable;
@@ -63,7 +63,8 @@ public class ManageFlightsPanel extends JPanel {
         refreshFlights();
     }
 
-    private void refreshFlights() {
+    @Override
+    public void refreshFlights() {
         try {
             List<Flight> flights = flightService.getAllFlights();
             updateTableModel(flights);
@@ -76,7 +77,8 @@ public class ManageFlightsPanel extends JPanel {
         }
     }
 
-    private void updateTableModel(List<Flight> flights) {
+    @Override
+    public void updateTableModel(List<Flight> flights) {
         tableModel.setRowCount(0);
         try {
             for (Flight flight : flights) {
@@ -100,7 +102,8 @@ public class ManageFlightsPanel extends JPanel {
         }
     }
 
-    private void showAddFlightDialog() {
+    @Override
+    public void showAddFlightDialog() {
         try {
             List<Plane> planes = planeService.getAllPlanes();
             if (planes.isEmpty()) {
@@ -226,7 +229,8 @@ public class ManageFlightsPanel extends JPanel {
         }
     }
 
-    private void editSelectedFlight() {
+    @Override
+    public void editSelectedFlight() {
         int selectedRow = flightTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
@@ -254,7 +258,8 @@ public class ManageFlightsPanel extends JPanel {
         }
     }
 
-    private void showEditFlightDialog(Flight flight) {
+    @Override
+    public void showEditFlightDialog(Flight flight) {
         try {
             List<Plane> planes = planeService.getAllPlanes();
             Plane currentPlane = planeService.getPlaneById(flight.getPlaneId());
@@ -378,7 +383,8 @@ public class ManageFlightsPanel extends JPanel {
         }
     }
 
-    private void deleteSelectedFlight() {
+    @Override
+    public void deleteSelectedFlight() {
         int selectedRow = flightTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
